@@ -1,34 +1,35 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import tw from 'twrnc';
+import BaseText from './BaseText';
 import TitleText from './TitleText';
 
 const CourseGridItem = ({ isTeacher, title, types, description, date, onSelectCourse }) => {
   let contentEl = (
     <>
-      <Pressable style={tw`w-1/2 bg-blue-500 rounded-xl h-full`} onPress={onSelectCourse}>
+      <Pressable style={tw`w-1/2 bg-blue-500 rounded-xl`} onPress={onSelectCourse}>
         <View></View>
       </Pressable>
-      <View style={tw`w-1/2 h-full px-3`}>
+      <View style={tw`w-1/2 justify-evenly`}>
         <TitleText titleText={title} />
-        <Text style={{ paddingBottom: 8 }} numberOfLines={1}>
+        <BaseText style="mx-2 text-gray-400" numberOfLines={1}>
           {description}
-        </Text>
-        <Text style={{ paddingBottom: 8 }}>{date}</Text>
-        <Text>369人已报名</Text>
+        </BaseText>
+        <BaseText style="mx-2 text-xs text-gray-400">{date}</BaseText>
+        <BaseText style="mx-2 text-xs text-gray-400">369人已报名</BaseText>
       </View>
     </>
   );
   if (isTeacher) {
     contentEl = (
       <>
-        <View style={tw`w-1/3 bg-blue-500 rounded-xl`}></View>
-        <View style={tw`w-2/3 h-full px-3`}>
+        <View style={tw`w-1/3 bg-blue-500 h-full rounded-xl`}></View>
+        <View style={tw`w-2/3 justify-evenly`}>
           <TitleText titleText={title} />
-          <Text style={{ paddingBottom: 8 }}>{types}</Text>
-          <Text style={{ paddingBottom: 8 }} numberOfLines={3}>
+          <BaseText style="mx-2 text-gray-400">{types}</BaseText>
+          <BaseText style="mx-2 text-gray-400" numberOfLines={3}>
             {description}
-          </Text>
+          </BaseText>
         </View>
       </>
     );

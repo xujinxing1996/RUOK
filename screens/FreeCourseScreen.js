@@ -13,18 +13,19 @@ const FreeCourseScreen = ({ navigation, route }) => {
 
   const renderGridItem = (itemData) => {
     return (
-      <MoreCourseItem onSelectCourse={() => navigation.navigate('CourseDetail')} />
+      <MoreCourseItem
+        onSelectCourse={() => navigation.navigate('CourseDetail')}
+      />
     );
   };
 
   return (
-    <View style={tw`flex-1 px-3 bg-white`}>
-      <FlatList
-        data={COURSES}
-        keyExtractor={(item) => item.id}
-        renderItem={renderGridItem}
-      />
-    </View>
+    <FlatList
+      style={tw`flex-1 px-3 bg-white`}
+      data={COURSES}
+      keyExtractor={(item) => item.id}
+      renderItem={renderGridItem}
+    />
   );
 };
 

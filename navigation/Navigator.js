@@ -11,12 +11,18 @@ import PlanScreen from '../screens/PlanScreen';
 import UserScreen from '../screens/UserScreen';
 import VideoDetailScreen from '../screens/VideoDetailScreen';
 import CoursesScreen from '../screens/CoursesScreen';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import IonicsHeaderButton from '../components/IonicsHeaderButton';
 
 const Stack = createNativeStackNavigator();
 
 const HomeNavigator = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShadowVisible: false, headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={IonicsHeaderButton}>
+        <Item title="Ellipses" iconName="ios-chatbox-ellipses" />
+      </HeaderButtons>
+    ), }}>
       <Stack.Screen
         name="Home"
         component={HomeScreen}
@@ -50,7 +56,8 @@ const CourseTabNavigator = () => {
       <Tab.Navigator
         screenOptions={{
           headerTitleAlign: 'center',
-          tabBarActiveTintColor: '#e91e63',
+          tabBarActiveTintColor: '#3b82f6',
+          headerShadowVisible: false,
         }}
       >
         <Tab.Screen
@@ -92,6 +99,11 @@ const CourseTabNavigator = () => {
           options={{
             title: '我的',
             tabBarLabel: '我的',
+            headerRight: () => (
+              <HeaderButtons HeaderButtonComponent={IonicsHeaderButton}>
+                <Item title="Ellipses" iconName="ios-chatbox-ellipses" />
+              </HeaderButtons>
+            ),
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="ios-person" size={size} color={color} />
             ),

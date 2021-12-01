@@ -13,16 +13,22 @@ import VideoDetailScreen from '../screens/VideoDetailScreen';
 import CoursesScreen from '../screens/CoursesScreen';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import IonicsHeaderButton from '../components/IonicsHeaderButton';
+import AuthScreen from '../screens/AuthScreen';
 
 const Stack = createNativeStackNavigator();
 
 const HomeNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShadowVisible: false, headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={IonicsHeaderButton}>
-        <Item title="Ellipses" iconName="ios-chatbox-ellipses" />
-      </HeaderButtons>
-    ), }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShadowVisible: false,
+        headerRight: () => (
+          <HeaderButtons HeaderButtonComponent={IonicsHeaderButton}>
+            <Item title="Ellipses" iconName="ios-chatbox-ellipses" />
+          </HeaderButtons>
+        ),
+      }}
+    >
       <Stack.Screen
         name="Home"
         component={HomeScreen}
@@ -42,7 +48,24 @@ const HomeNavigator = () => {
       <Stack.Screen
         name="VideoDetail"
         component={VideoDetailScreen}
-        options={{ title: '课程名称', }}
+        options={{ title: '课程名称' }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const CoursesNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Course"
+        component={CoursesScreen}
+        options={{ title: '课程' }}
+      />
+      <Stack.Screen
+        name="CourseDetail"
+        component={CourseDetail}
+        options={{ title: '课程详情' }}
       />
     </Stack.Navigator>
   );
@@ -52,66 +75,83 @@ const Tab = createBottomTabNavigator();
 
 const CourseTabNavigator = () => {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={{
-          headerTitleAlign: 'center',
-          tabBarActiveTintColor: '#3b82f6',
-          headerShadowVisible: false,
+    <Tab.Navigator
+      screenOptions={{
+        headerTitleAlign: 'center',
+        tabBarActiveTintColor: '#3b82f6',
+        headerShadowVisible: false,
+      }}
+    >
+      <Tab.Screen
+        name="HomeScreen"
+        component={HomeNavigator}
+        options={{
+          headerShown: false,
+          tabBarLabel: '首页',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="ios-home" size={size} color={color} />
+          ),
         }}
-      >
-        <Tab.Screen
-          name="HomeScreen"
-          component={HomeNavigator}
-          options={{
-            headerShown: false,
-            tabBarLabel: '首页',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="ios-home" size={size} color={color} />
-            ),
-          }}
+      />
+      <Tab.Screen
+        name="CourseScreen"
+        component={CoursesNavigator}
+        options={{
+          headerShown: false,
+          tabBarLabel: '课程',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="ios-reader" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="PlanScreen"
+        component={PlanScreen}
+        options={{
+          title: '我的课程',
+          tabBarLabel: '学习',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="ios-book" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="UserScreen"
+        component={UserScreen}
+        options={{
+          title: '我的',
+          tabBarLabel: '我的',
+          headerRight: () => (
+            <HeaderButtons HeaderButtonComponent={IonicsHeaderButton}>
+              <Item title="Ellipses" iconName="ios-chatbox-ellipses" />
+            </HeaderButtons>
+          ),
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="ios-person" size={size} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const MainNavigator = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="SignIn"
+          options={{ title: '登录', headerTitleAlign: 'center' }}
+          component={AuthScreen}
         />
-        <Tab.Screen
-          name="Course"
-          component={CoursesScreen}
-          options={{
-            title: '课程',
-            tabBarLabel: '课程',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="ios-reader" size={size} color={color} />
-            ),
-          }}
+        <Stack.Screen
+          name="Main"
+          options={{ headerShown: false }}
+          component={CourseTabNavigator}
         />
-        <Tab.Screen
-          name="PlanScreen"
-          component={PlanScreen}
-          options={{
-            title: '我的课程',
-            tabBarLabel: '学习',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="ios-book" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="UserScreen"
-          component={UserScreen}
-          options={{
-            title: '我的',
-            tabBarLabel: '我的',
-            headerRight: () => (
-              <HeaderButtons HeaderButtonComponent={IonicsHeaderButton}>
-                <Item title="Ellipses" iconName="ios-chatbox-ellipses" />
-              </HeaderButtons>
-            ),
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="ios-person" size={size} color={color} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-export default CourseTabNavigator;
+export default MainNavigator;

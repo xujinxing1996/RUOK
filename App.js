@@ -4,6 +4,13 @@ import AppLoading from 'expo-app-loading';
 import { View } from 'react-native';
 import tw from 'twrnc';
 import CourseTabNavigator from './navigation/Navigator';
+import { Provider } from 'react-redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
+import ReduxThunk from 'redux-thunk';
+import coursesReducer from './store/reducers/courses';
+import swipersReducer from './store/reducers/swipers';
+import teachersReducer from './store/reducers/teachers';
+import authReducer from './store/reducers/auth';
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -11,6 +18,14 @@ const fetchFonts = () => {
     'NotoSansSc-Regular': require('./assets/fonts/NotoSansSC-Regular.otf'),
   });
 };
+
+const rootReducer = combineReducers({
+  courses: coursesReducer,
+  swipers: swipersReducer,
+  teachers: teachersReducer,
+  auth: authReducer,
+});
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
@@ -26,8 +41,10 @@ export default function App() {
   }
 
   return (
-    <View style={tw`flex-1`}>
-      <CourseTabNavigator />
-    </View>
+    <Provider store={store}>
+      <View style={tw`flex-1`}>
+        <CourseTabNavigator />
+      </View>
+    </Provider>
   );
 }

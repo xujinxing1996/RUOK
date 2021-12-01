@@ -1,6 +1,7 @@
 class Course {
-  constructor(id, title, description, date) {
+  constructor(id, imageUrl, title, description, date) {
     this.id = id;
+    this.imageUrl = imageUrl;
     this.title = title;
     this.description = description;
     this.date = date;

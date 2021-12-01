@@ -1,33 +1,124 @@
-import React from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  ActivityIndicator,
+  View,
+  Text,
+  Button,
+} from 'react-native';
+import Swiper from 'react-native-swiper';
+import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import BaseText from '../components/BaseText';
+import CourseItem from '../components/course/CourseItem';
 import CourseGridItem from '../components/CourseGridItem';
 import ListHeader from '../components/ListHeader';
-import { COURSES, TEACHERS } from '../data/dummy-data';
+import * as swipersActions from '../store/actions/swipers';
+import * as coursesActions from '../store/actions/courses';
+import * as teachersActions from '../store/actions/teachers';
+import Colors from '../constants/Colors';
 
 const HomeScreen = ({ navigation }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+  const boutiqueCourses = useSelector((state) => state.courses.boutiqueCourses);
+  const freeCourses = useSelector((state) => state.courses.freeCourses);
+  const swipers = useSelector((state) => state.swipers.swiperImgs);
+  const activityImg = useSelector((state) => state.swipers.activityImg);
+  const teacherList = useSelector((state) => state.teachers.teacherList);
+  const dispatch = useDispatch();
+
+  const loadData = useCallback(async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(swipersActions.fetchSiwpers());
+      await dispatch(swipersActions.fetchActivityImg());
+      await dispatch(coursesActions.fetchBoutiqueCourses());
+      await dispatch(coursesActions.fetchFreeCourses());
+      await dispatch(teachersActions.fetchGetTeachers());
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
+  }, [dispatch, setIsLoading, setError]);
+
+  useEffect(() => {
+    loadData();
+  }, [dispatch, loadData]);
+
+  if (error) {
+    return (
+      <View style={tw``}>
+        <Text>系统错误</Text>
+        <Button title="重试" />
+      </View>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView>
       <ScrollView>
         <View style={tw`flex-1 bg-white`}>
-          <View style={tw`m-3`}>
-            <View style={tw`bg-blue-500 rounded-xl h-[180px]`}></View>
+          <View style={tw`mx-3 mb-3 `}>
+            <View style={tw`rounded-xl overflow-hidden`}>
+              <Swiper style={tw`h-[180px]`}>
+                {swipers &&
+                  swipers.map((item, index) => {
+                    return (
+                      <Image
+                        key={item.description + index}
+                        testId={item.description}
+                        style={tw`w-full h-[200px]`}
+                        source={{
+                          uri: item.imageUrl,
+                        }}
+                      />
+                    );
+                  })}
+              </Swiper>
+            </View>
             <View style={tw`m-[10px] flex-row`}>
               <View style={tw`flex-1 items-center`}>
+                <Image
+                  style={tw`w-[45px] h-[45px]`}
+                  source={require('../assets/images/huodong.jpg')}
+                />
                 <BaseText>活动中心</BaseText>
               </View>
               <View style={tw`flex-1 items-center`}>
+                <Image
+                  style={tw`w-[45px] h-[45px]`}
+                  source={require('../assets/images/remen.jpg')}
+                />
                 <BaseText>热门课程</BaseText>
               </View>
               <View style={tw`flex-1 items-center`}>
+                <Image
+                  style={tw`w-[45px] h-[45px]`}
+                  source={require('../assets/images/teacher.jpg')}
+                />
                 <BaseText>名师排行</BaseText>
               </View>
               <View style={tw`flex-1 items-center`}>
+                <Image
+                  style={tw`w-[45px] h-[45px]`}
+                  source={require('../assets/images/qiandao.jpg')}
+                />
                 <BaseText>签到</BaseText>
               </View>
             </View>
-            <View style={tw`bg-red-900 rounded-xl h-[180px]`}></View>
+            <Image style={tw`rounded-xl h-[180px]`} source={{ uri: activityImg && activityImg[0].imageUrl }} />
           </View>
           <ListHeader
             title="精品课程"
@@ -35,49 +126,57 @@ const HomeScreen = ({ navigation }) => {
               navigation.navigate('FreeCourse', { isFree: false });
             }}
           />
-          <View style={tw`mx-3 mt-3`}>
-            {COURSES.map((item) => (
-              <CourseGridItem
-                onSelectCourse={() => {
-                  navigation.navigate('CourseDetail');
-                }}
-                key={item.id}
-                title={item.title}
-                description={item.description}
-                date={item.date}
-              />
-            ))}
-          </View>
+          {boutiqueCourses.map((item) => (
+            <CourseGridItem
+              onSelectCourse={() => {
+                navigation.navigate('CourseDetail', {
+                  courseId: item.classId,
+                });
+              }}
+              imageUrl={item.classImage}
+              key={item.classId}
+              title={item.className}
+              description={item.courseDescription}
+              beginDate={item.beginTime}
+              endDate={item.endTime}
+            />
+          ))}
           <ListHeader
             title="免费课程"
             onSelect={() => {
               navigation.navigate('FreeCourse', { isFree: true });
             }}
           />
-          <View style={tw`mx-3 mt-3`}>
-            {COURSES.map((item) => (
-              <CourseGridItem
-                onSelectCourse={() => {
-                  navigation.navigate('CourseDetail');
-                }}
-                key={item.id}
-                title={item.title}
-                description={item.description}
-                date={item.date}
-              />
-            ))}
-          </View>
-          <ListHeader onSelect={() => {
-            navigation.navigate('Teachers')
-          }} title="名师简介" />
+          {freeCourses.map((item) => (
+            <CourseItem
+              onSelectCourse={() => {
+                navigation.navigate('CourseDetail', {
+                  courseId: item.classId
+                });
+              }}
+              imageUrl={item.classImage}
+              key={item.classId}
+              title={item.className}
+              description={item.courseDescription}
+              beginDate={item.beginTime}
+              endDate={item.endTime}
+            />
+          ))}
+          <ListHeader
+            onSelect={() => {
+              navigation.navigate('Teachers');
+            }}
+            title="名师简介"
+          />
           <View style={tw`m-3`}>
-            {TEACHERS.map((item) => (
+            {teacherList.map((item) => (
               <CourseGridItem
-                key={item.id}
+                key={item.teacherId}
+                imageUrl={item.teacherImage}
                 isTeacher={true}
-                title={item.title}
-                types={item.types}
-                description={item.description}
+                title={item.teacherName}
+                types={item.teacherCourse}
+                description={item.teacherDesc}
               />
             ))}
           </View>

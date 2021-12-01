@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
 import BaseText from '../components/BaseText';
@@ -18,7 +18,12 @@ const UserScreen = (props) => {
           <BaseText>13812348001</BaseText>
         </View>
       </View>
-      <View style={tw`rounded-full py-3 px-6 bg-purple-400 mx-8 h-12`}></View>
+      <View style={tw`rounded-full mx-8 h-12`}>
+        <Image
+          style={tw`w-full h-full`}
+          source={require('../assets/images/user-banner.png')}
+        />
+      </View>
       <View style={tw`h-[9px] my-4 bg-gray-200`}></View>
       <View>
         <View

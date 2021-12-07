@@ -26,6 +26,16 @@ const CourseDetail = ({ navigation, route }) => {
     setIsLoading(false);
   }, [dispatch, setIsLoading]);
 
+  const handleStartStudy = () => {
+    if (route.name === 'CourseHomeDetail') {
+      navigation.navigate('HomeVideoDetail')
+    } else if (route.name === 'CourseDetail') {
+      navigation.navigate('CourseVideoDetail')
+    } else if (route.name === 'UserCourseDetail') {
+      navigation.navigate('UserVideoDetail')
+    }
+  };
+
   useEffect(() => {
     loadData();
   }, [dispatch, loadData]);
@@ -44,6 +54,7 @@ const CourseDetail = ({ navigation, route }) => {
         <ScrollView>
           <View style={tw`m-4`}>
             <Image
+              resizeMode="stretch"
               style={tw`w-full h-[200px] rounded-xl mb-3`}
               source={{ uri: selectedCourse.classImage }}
             />
@@ -96,7 +107,7 @@ const CourseDetail = ({ navigation, route }) => {
           </View>
           <View style={tw`rounded-xl my-7 items-center`}>
             <Button
-              onPress={() => navigation.navigate('VideoDetail')}
+              onPress={handleStartStudy}
               title="开始学习"
             />
           </View>

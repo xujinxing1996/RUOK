@@ -1,25 +1,87 @@
-import React from 'react';
-import { Image, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  Image,
+  Text,
+  View,
+  Button,
+  ActivityIndicator,
+  Pressable,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
+import { useDispatch, useSelector } from 'react-redux';
 import BaseText from '../components/BaseText';
+import * as userActions from '../store/actions/user';
+import Colors from '../constants/Colors';
+import { useFocusEffect } from '@react-navigation/core';
 
-const UserScreen = (props) => {
+const UserScreen = ({ navigation, route }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const userInfo = useSelector((state) => state.user.userInfo);
+  const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
+
+  const loadData = async () => {
+    try {
+      if (token) {
+        setIsLoading(true);
+        await dispatch(userActions.getUserInfo());
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log(`error`, error);
+    }
+  };
+
+  useFocusEffect(useCallback(() => {
+    loadData();
+  }, [dispatch]));
+
+  // useEffect(() => {
+  //   loadData();
+  // }, [navigation, dispatch, route.name]);
+
+  if (!token) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <Text>请登录!</Text>
+        <Button
+          title="登录"
+          onPress={() => navigation.navigate('UserAuthScreen')}
+          color={Colors.primary}
+        />
+      </View>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <View style={tw`bg-white h-full`}>
       <View style={tw`flex-row items-center mx-10 mb-4`}>
         <View
           style={tw`rounded-full bg-purple-200 h-15 w-15 items-center justify-center mr-4`}
         >
-          <Ionicons name="ios-person" size={35} color="purple" />
+          {userInfo && userInfo.avatar ? (
+            <Image style={tw`w-15 h-15`} source={{ uri: userInfo.avatar }} />
+          ) : (
+            <Ionicons name="ios-person" size={35} color="purple" />
+          )}
         </View>
         <View>
-          <BaseText>张三</BaseText>
-          <BaseText>13812348001</BaseText>
+          <BaseText>{userInfo && userInfo.realName}</BaseText>
+          <BaseText>{userInfo && userInfo.phonenumber}</BaseText>
         </View>
       </View>
       <View style={tw`rounded-full mx-8 h-12`}>
         <Image
+          resizeMode="stretch"
           style={tw`w-full h-full`}
           source={require('../assets/images/user-banner.png')}
         />
@@ -35,15 +97,16 @@ const UserScreen = (props) => {
           </View>
           <Ionicons name="ios-chevron-forward" color="gray" size={20} />
         </View>
-        <View
+        <Pressable
           style={tw`px-8 py-2 border-b border-gray-200 flex-row justify-between items-center`}
+          onPress={() => navigation.navigate('Settings')}
         >
           <View style={tw`flex-row`}>
             <Ionicons name="ios-layers" size={20} />
             <BaseText style="ml-3 font-bold">设置</BaseText>
           </View>
           <Ionicons name="ios-chevron-forward" color="gray" size={20} />
-        </View>
+        </Pressable>
         <View
           style={tw`px-8 py-2 border-b border-gray-200 flex-row justify-between items-center`}
         >

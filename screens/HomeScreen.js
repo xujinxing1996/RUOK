@@ -19,6 +19,7 @@ import * as swipersActions from '../store/actions/swipers';
 import * as coursesActions from '../store/actions/courses';
 import * as teachersActions from '../store/actions/teachers';
 import Colors from '../constants/Colors';
+import AsyncStorageLib from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,9 +37,9 @@ const HomeScreen = ({ navigation }) => {
     try {
       await dispatch(swipersActions.fetchSiwpers());
       await dispatch(swipersActions.fetchActivityImg());
-      await dispatch(coursesActions.fetchBoutiqueCourses());
-      await dispatch(coursesActions.fetchFreeCourses());
-      await dispatch(teachersActions.fetchGetTeachers());
+      await dispatch(coursesActions.fetchBoutiqueCourses(1, 2));
+      await dispatch(coursesActions.fetchFreeCourses(1, 2));
+      await dispatch(teachersActions.fetchGetTeachers(1, 3));
     } catch (err) {
       setError(err.message);
     }
@@ -47,7 +48,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     loadData();
-  }, [dispatch, loadData]);
+  }, [dispatch, loadData, navigation]);
 
   if (error) {
     return (
@@ -79,6 +80,7 @@ const HomeScreen = ({ navigation }) => {
                       <Image
                         key={item.description + index}
                         testId={item.description}
+                        resizeMode="stretch"
                         style={tw`w-full h-[200px]`}
                         source={{
                           uri: item.imageUrl,
@@ -118,7 +120,10 @@ const HomeScreen = ({ navigation }) => {
                 <BaseText>签到</BaseText>
               </View>
             </View>
-            <Image style={tw`rounded-xl h-[180px]`} source={{ uri: activityImg && activityImg[0].imageUrl }} />
+            <Image
+              style={tw`rounded-xl h-[180px]`}
+              source={{ uri: activityImg && activityImg[0].imageUrl }}
+            />
           </View>
           <ListHeader
             title="精品课程"
@@ -126,7 +131,7 @@ const HomeScreen = ({ navigation }) => {
               navigation.navigate('FreeCourse', { isFree: false });
             }}
           />
-          {boutiqueCourses.map((item) => (
+          {boutiqueCourses.slice(0, 2).map((item) => (
             <CourseGridItem
               onSelectCourse={() => {
                 navigation.navigate('CourseDetail', {
@@ -147,11 +152,11 @@ const HomeScreen = ({ navigation }) => {
               navigation.navigate('FreeCourse', { isFree: true });
             }}
           />
-          {freeCourses.map((item) => (
+          {freeCourses.slice(0, 2).map((item) => (
             <CourseItem
               onSelectCourse={() => {
                 navigation.navigate('CourseDetail', {
-                  courseId: item.classId
+                  courseId: item.classId,
                 });
               }}
               imageUrl={item.classImage}
@@ -168,8 +173,8 @@ const HomeScreen = ({ navigation }) => {
             }}
             title="名师简介"
           />
-          <View style={tw`m-3`}>
-            {teacherList.map((item) => (
+          <View style={tw`mx-3`}>
+            {teacherList.slice(0, 3).map((item) => (
               <CourseGridItem
                 key={item.teacherId}
                 imageUrl={item.teacherImage}

@@ -14,6 +14,8 @@ import CoursesScreen from '../screens/CoursesScreen';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import IonicsHeaderButton from '../components/IonicsHeaderButton';
 import AuthScreen from '../screens/AuthScreen';
+import StartupScreen from '../screens/StartupScreen';
+import SettingScreen from '../screens/SettingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,17 +24,19 @@ const HomeNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         headerShadowVisible: false,
-        headerRight: () => (
-          <HeaderButtons HeaderButtonComponent={IonicsHeaderButton}>
-            <Item title="Ellipses" iconName="ios-chatbox-ellipses" />
-          </HeaderButtons>
-        ),
       }}
     >
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={{ title: '全部' }}
+        options={{
+          title: '全部',
+          headerRight: () => (
+            <HeaderButtons HeaderButtonComponent={IonicsHeaderButton}>
+              <Item title="Ellipses" iconName="ios-chatbox-ellipses" />
+            </HeaderButtons>
+          ),
+        }}
       />
       <Stack.Screen name="FreeCourse" component={FreeCourseScreen} />
       <Stack.Screen
@@ -41,14 +45,14 @@ const HomeNavigator = () => {
         options={{ title: '名师简介' }}
       />
       <Stack.Screen
-        name="CourseDetail"
+        name="CourseHomeDetail"
         component={CourseDetail}
         options={{ title: '课程详情' }}
       />
       <Stack.Screen
-        name="VideoDetail"
+        name="HomeVideoDetail"
         component={VideoDetailScreen}
-        options={{ title: '课程名称' }}
+        options={{ title: '' }}
       />
     </Stack.Navigator>
   );
@@ -56,7 +60,9 @@ const HomeNavigator = () => {
 
 const CoursesNavigator = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{ headerTitleAlign: 'center', headerShadowVisible: false }}
+    >
       <Stack.Screen
         name="Course"
         component={CoursesScreen}
@@ -66,6 +72,71 @@ const CoursesNavigator = () => {
         name="CourseDetail"
         component={CourseDetail}
         options={{ title: '课程详情' }}
+      />
+      <Stack.Screen
+        name="CourseVideoDetail"
+        component={VideoDetailScreen}
+        options={{ title: '' }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const UserCoursesNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerTitleAlign: 'center', headerShadowVisible: false }}
+    >
+      <Stack.Screen
+        name="UserCourses"
+        component={PlanScreen}
+        options={{ title: '我的课程' }}
+      />
+      <Stack.Screen
+        name="UserCourseDetail"
+        component={CourseDetail}
+        options={{ title: '课程详情' }}
+      />
+      <Stack.Screen
+        name="UserVideoDetail"
+        component={VideoDetailScreen}
+        options={{ title: '' }}
+      />
+      <Stack.Screen
+        name="AuthScreen"
+        component={AuthScreen}
+        options={{ title: '登录' }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const UserInfoNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerTitleAlign: 'center', headerShadowVisible: false }}
+    >
+      <Stack.Screen
+        name="UserInfo"
+        component={UserScreen}
+        options={{
+          title: '我的',
+          headerRight: () => (
+            <HeaderButtons HeaderButtonComponent={IonicsHeaderButton}>
+              <Item title="Ellipses" iconName="ios-chatbox-ellipses" />
+            </HeaderButtons>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingScreen}
+        options={{ title: '设置' }}
+      />
+      <Stack.Screen
+        name="UserAuthScreen"
+        component={AuthScreen}
+        options={{ title: '登录' }}
       />
     </Stack.Navigator>
   );
@@ -106,9 +177,10 @@ const CourseTabNavigator = () => {
       />
       <Tab.Screen
         name="PlanScreen"
-        component={PlanScreen}
+        component={UserCoursesNavigator}
         options={{
           title: '我的课程',
+          headerShown: false,
           tabBarLabel: '学习',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="ios-book" size={size} color={color} />
@@ -117,9 +189,10 @@ const CourseTabNavigator = () => {
       />
       <Tab.Screen
         name="UserScreen"
-        component={UserScreen}
+        component={UserInfoNavigator}
         options={{
           title: '我的',
+          headerShown: false,
           tabBarLabel: '我的',
           headerRight: () => (
             <HeaderButtons HeaderButtonComponent={IonicsHeaderButton}>
@@ -138,17 +211,9 @@ const CourseTabNavigator = () => {
 const MainNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="SignIn"
-          options={{ title: '登录', headerTitleAlign: 'center' }}
-          component={AuthScreen}
-        />
-        <Stack.Screen
-          name="Main"
-          options={{ headerShown: false }}
-          component={CourseTabNavigator}
-        />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="StartUp" component={StartupScreen} />
+        <Stack.Screen name="Main" component={CourseTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

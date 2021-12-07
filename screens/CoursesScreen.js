@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Button, FlatList, View } from 'react-native';
+import { ActivityIndicator, Button, FlatList, View, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import MoreCourseItem from '../components/MoreCourseItem';
 import Colors from '../constants/Colors';
-import { COURSES } from '../data/dummy-data';
 import * as coursesAction from '../store/actions/courses';
 
 const CoursesScreen = ({ navigation }) => {
@@ -55,6 +54,12 @@ const CoursesScreen = ({ navigation }) => {
       refreshing={isRefreshing}
       onRefresh={loadData}
       data={allCourses}
+      ListHeaderComponent={
+        <Image
+          style={tw`h-[200px] w-full`}
+          source={require('../assets/images/kecheng.jpg')}
+        />
+      }
       keyExtractor={(item) => item.classId}
       renderItem={({ item }) => (
         <MoreCourseItem

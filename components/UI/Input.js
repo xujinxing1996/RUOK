@@ -25,7 +25,7 @@ const inputReducer = (state, action) => {
 
 const Input = (props) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: '',
+    value: props.initialValue || '',
     isValid: false,
     touched: false,
   });
@@ -36,7 +36,7 @@ const Input = (props) => {
     if (inputState.touched) {
       onInputChange(id, inputState.isValid, inputState.value);
     }
-  }, [inputState]);
+  }, [inputState, onInputChange, id]);
 
   const handleChangeText = (value) => {
     let isValid = true;

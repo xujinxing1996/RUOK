@@ -4,6 +4,7 @@ import {
   SET_BOUTIQUE_COURSES,
   SET_DETAIL_COURSE,
   SET_FREE_COURSES,
+  SET_USER_COURSES,
 } from '../actions/courses';
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
   freeCourses: [],
   courseInfo: null,
   allCourses: [],
+  userCourses: [],
 };
 
 export default (state = initialState, action) => {
@@ -35,6 +37,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         allCourses: action.products,
+      };
+    case SET_USER_COURSES:
+      return {
+        ...state,
+        userCourses: action.products,
       };
   }
   return state;

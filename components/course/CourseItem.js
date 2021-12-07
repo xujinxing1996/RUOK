@@ -26,13 +26,13 @@ const CourseItem = ({
 
   return (
     <View
-      style={tw`shadow-black shadow-opacity-26 shadow-offset-[0]/[2px] shadow-radius-[8px] elevation-6 rounded-xl bg-white h-[300px] m-3`}
+      style={tw`shadow-black shadow-opacity-26 shadow-offset-[0]/[2px] shadow-radius-[8px] elevation-6 rounded-xl bg-white h-[300px] mx-3 mb-3.5`}
     >
       <View style={tw`overflow-hidden rounded-xl`}>
         <TouchableCmp onPress={onSelectCourse} useForeground>
           <View>
             <View style={tw`w-full h-[60%] rounded-tl-xl rounded-tr-xl`}>
-              <Image style={tw`w-full h-full`} source={{ uri: imageUrl }} />
+              <Image style={tw`w-full h-full`} resizeMode="stretch" source={{ uri: imageUrl }} />
             </View>
             <View style={tw`h-[40%] items-center justify-around p-[10px]`}>
               <TitleText titleText={title} />

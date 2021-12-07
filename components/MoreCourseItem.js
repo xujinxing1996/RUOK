@@ -10,7 +10,7 @@ const MoreCourseItem = ({
 }) => {
   return (
     <View style={tw`flex-row justify-between my-2`}>
-      <Image style={tw`w-2/5 rounded-xl`} source={{ uri: imageUrl }} />
+      <Image style={tw`w-2/5 rounded-xl`} resizeMode="stretch" source={{ uri: imageUrl }} />
       <View style={tw`w-4/7 p-4 border border-gray-200 rounded-xl`}>
         <Text style={tw.style('text-sm', { fontFamily: 'NotoSansSc-Bold' })}>
           {title}

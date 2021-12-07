@@ -11,6 +11,7 @@ import coursesReducer from './store/reducers/courses';
 import swipersReducer from './store/reducers/swipers';
 import teachersReducer from './store/reducers/teachers';
 import authReducer from './store/reducers/auth';
+import userReducer from './store/reducers/user';
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   swipers: swipersReducer,
   teachers: teachersReducer,
   auth: authReducer,
+  user: userReducer,
 });
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 

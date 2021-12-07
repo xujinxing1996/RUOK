@@ -1,6 +1,6 @@
 export const SET_TEACHERS = 'SET_TEACHERS';
 
-export const fetchGetTeachers = () => {
+export const fetchGetTeachers = (page, size) => {
   return async (dispatch) => {
     try {
       const response = await fetch('http://121.199.173.63:8007/api/open/interface/getResult', {
@@ -10,8 +10,8 @@ export const fetchGetTeachers = () => {
         },
         body: JSON.stringify({
           interfaceCode: 'SI0003',
-          page: 1,
-          size: 3,
+          page,
+          size,
         }),
       });
 

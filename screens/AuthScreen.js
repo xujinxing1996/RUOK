@@ -44,7 +44,7 @@ const formReducer = (state, action) => {
   }
 };
 
-const AuthScreen = (props) => {
+const AuthScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
@@ -72,6 +72,7 @@ const AuthScreen = (props) => {
       setCodeBtnIsDisable(false);
       clearInterval(timer);
     }
+    return timer;
   }, [codeTimeNum]);
 
   useEffect(() => {
@@ -115,7 +116,11 @@ const AuthScreen = (props) => {
           isLogin
         )
       );
-      props.navigation.navigate('Main');
+      if (route.name === 'UserAuthScreen') {
+        navigation.navigate('UserInfo');
+      } else {
+        navigation.navigate('UserCourses');
+      }
     } catch (error) {
       setError(error.message);
       setIsLoading(false);
@@ -141,7 +146,8 @@ const AuthScreen = (props) => {
       label="密码"
       required
       errorText="请输入密码"
-      onInputChange={handleChangeText}
+      autoCapitalize="none"
+r      onInputChange={handleChangeText}
     />
   );
   if (!isLogin) {
@@ -150,6 +156,7 @@ const AuthScreen = (props) => {
         <Input
           id="password"
           label="验证码"
+          initialValue=""
           required
           errorText="请输入验证码"
           onInputChange={handleChangeText}
@@ -179,6 +186,7 @@ const AuthScreen = (props) => {
               id="phoneNumber"
               label="用户名"
               keyboardType="phone-pad"
+              initialValue=""
               required
               errorText="请输入用户名"
               onInputChange={handleChangeText}

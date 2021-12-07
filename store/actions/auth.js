@@ -1,26 +1,11 @@
-export const SIGNUP = 'SIGNUP';
-export const LOGIN = 'LOGIN';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TOKEN } from '../../constants/Auth';
 
-export const signup = (email, password) => {
-  return async (dispatch) => {
-    const response = await fetch('', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: '',
-        password: '',
-      }),
-    });
+export const AUTHENTICATE = 'AUTHENTICATE';
+export const LOGOUT = 'LOGOUT';
 
-    if (!response.ok) {
-      throw new Error('请求错误');
-    }
-
-    const resData = await response.json();
-    dispatch(SIGNUP, resDta.data);
-  };
+export const authenticate = (token) => {
+  return { type: AUTHENTICATE, token };
 };
 
 export const login = (phoneNumber, password, isLogin) => {
@@ -29,15 +14,15 @@ export const login = (phoneNumber, password, isLogin) => {
     let data = {
       code: 'CHUJIEKEJI',
       interfaceCode: 'TN0001',
-      mobile: '15888888888',
-      password: 'admin123',
+      mobile: phoneNumber,
+      password,
       uuid: '123',
     };
     if (!isLogin) {
       url = 'http://121.199.173.63:8007/api/authentication/mobile';
       data = {
         code: 'CHUJIEKEJI',
-        mobile: '15652547467',
+        mobile: phoneNumber,
       };
     }
     const response = await fetch(url, {
@@ -54,7 +39,8 @@ export const login = (phoneNumber, password, isLogin) => {
     if (resData.code === 500) {
       throw new Error(resData.msg);
     }
-    dispatch({ type: LOGIN, token: resData.token });
+    dispatch(authenticate(resData.token));
+    saveDataToStorage(resData.token);
   };
 };
 
@@ -72,4 +58,14 @@ export const getCode = (phoneNumber) => {
     }
     const resData = await response.json();
   };
+};
+
+export const logout = () => {
+  return { type: LOGOUT };
+};
+
+const saveDataToStorage = async (token) => {
+  try {
+    await AsyncStorage.setItem(TOKEN, token);
+  } catch (error) {}
 };

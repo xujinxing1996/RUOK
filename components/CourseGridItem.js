@@ -21,10 +21,10 @@ const CourseGridItem = ({
   }
 
   let contentEl = (
-    <View style={tw`m-3 flex-row h-[130px]`}>
+    <View style={tw`mx-3 mb-3.5 flex-row h-[130px]`}>
       <TouchableCmp onPress={onSelectCourse} useForeground>
         <View style={tw`flex-row h-full`}>
-          <Image style={tw`w-1/2 h-full rounded-xl`} source={{ uri: imageUrl }} />
+          <Image style={tw`w-1/2 h-full rounded-xl`} resizeMode="stretch" source={{ uri: imageUrl }} />
           <View style={tw`w-1/2 justify-evenly`}>
             <TitleText titleText={title} />
             <BaseText style="mx-2 text-gray-400" numberOfLines={1}>
@@ -41,9 +41,9 @@ const CourseGridItem = ({
   );
   if (isTeacher) {
     contentEl = (
-      <View style={tw`flex-row h-[130px] mb-3`}>
+      <View style={tw`flex-row h-[130px] mb-3 p-2 rounded-xl border-gray-300 border justify-between`}>
         <Image style={tw`w-1/3 h-full rounded-xl`} source={{ uri: imageUrl }} />
-        <View style={tw`w-2/3 justify-evenly`}>
+        <View style={tw`w-[65%] justify-evenly`}>
           <TitleText titleText={title} />
           <BaseText style="mx-2 text-gray-400">{types}</BaseText>
           <BaseText style="mx-2 text-gray-400" numberOfLines={3}>

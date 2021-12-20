@@ -55,10 +55,12 @@ const CoursesScreen = ({ navigation }) => {
       onRefresh={loadData}
       data={allCourses}
       ListHeaderComponent={
-        <Image
-          style={tw`h-[200px] w-full`}
-          source={require('../assets/images/kecheng.jpg')}
-        />
+        <View>
+          <Image
+            style={tw`h-[200px] w-full`}
+            source={require('../assets/images/kecheng.jpg')}
+          />
+        </View>
       }
       keyExtractor={(item) => item.classId}
       renderItem={({ item }) => (

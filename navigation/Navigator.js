@@ -38,22 +38,6 @@ const HomeNavigator = () => {
           ),
         }}
       />
-      <Stack.Screen name="FreeCourse" component={FreeCourseScreen} />
-      <Stack.Screen
-        name="Teachers"
-        component={TeacherScreen}
-        options={{ title: '名师简介' }}
-      />
-      <Stack.Screen
-        name="CourseHomeDetail"
-        component={CourseDetail}
-        options={{ title: '课程详情' }}
-      />
-      <Stack.Screen
-        name="HomeVideoDetail"
-        component={VideoDetailScreen}
-        options={{ title: '' }}
-      />
     </Stack.Navigator>
   );
 };
@@ -68,16 +52,6 @@ const CoursesNavigator = () => {
         component={CoursesScreen}
         options={{ title: '课程' }}
       />
-      <Stack.Screen
-        name="CourseDetail"
-        component={CourseDetail}
-        options={{ title: '课程详情' }}
-      />
-      <Stack.Screen
-        name="CourseVideoDetail"
-        component={VideoDetailScreen}
-        options={{ title: '' }}
-      />
     </Stack.Navigator>
   );
 };
@@ -91,21 +65,6 @@ const UserCoursesNavigator = () => {
         name="UserCourses"
         component={PlanScreen}
         options={{ title: '我的课程' }}
-      />
-      <Stack.Screen
-        name="UserCourseDetail"
-        component={CourseDetail}
-        options={{ title: '课程详情' }}
-      />
-      <Stack.Screen
-        name="UserVideoDetail"
-        component={VideoDetailScreen}
-        options={{ title: '' }}
-      />
-      <Stack.Screen
-        name="AuthScreen"
-        component={AuthScreen}
-        options={{ title: '登录' }}
       />
     </Stack.Navigator>
   );
@@ -136,7 +95,7 @@ const UserInfoNavigator = () => {
       <Stack.Screen
         name="UserAuthScreen"
         component={AuthScreen}
-        options={{ title: '登录' }}
+        options={{ title: '' }}
       />
     </Stack.Navigator>
   );
@@ -211,9 +170,58 @@ const CourseTabNavigator = () => {
 const MainNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="StartUp" component={StartupScreen} />
-        <Stack.Screen name="Main" component={CourseTabNavigator} />
+      <Stack.Navigator>
+        <Stack.Screen
+          name="StartUp"
+          options={{ headerShown: false }}
+          component={StartupScreen}
+        />
+        <Stack.Screen
+          name="Main"
+          options={{ headerShown: false }}
+          component={CourseTabNavigator}
+        />
+        <Stack.Screen name="FreeCourse" component={FreeCourseScreen} />
+        <Stack.Screen
+          name="Teachers"
+          component={TeacherScreen}
+          options={{ title: '名师简介', headerBackTitle: '全部' }}
+        />
+        <Stack.Screen
+          name="CourseHomeDetail"
+          component={CourseDetail}
+          options={{ title: '课程详情', headerBackTitle: '全部' }}
+        />
+        <Stack.Screen
+          name="HomeVideoDetail"
+          component={VideoDetailScreen}
+          options={{ title: '' }}
+        />
+        <Stack.Screen
+          name="CourseDetail"
+          component={CourseDetail}
+          options={{ title: '课程详情', headerBackTitle: '课程' }}
+        />
+        <Stack.Screen
+          name="CourseVideoDetail"
+          component={VideoDetailScreen}
+          options={{ title: '' }}
+        />
+        <Stack.Screen
+          name="UserCourseDetail"
+          component={CourseDetail}
+          options={{ title: '课程详情' }}
+        />
+        <Stack.Screen
+          name="UserVideoDetail"
+          component={VideoDetailScreen}
+          options={{ title: '' }}
+        />
+        <Stack.Screen
+          name="AuthScreen"
+          component={AuthScreen}
+          options={{ title: '', headerBackTitle: '学习' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

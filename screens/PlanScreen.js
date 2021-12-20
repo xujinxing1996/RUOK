@@ -17,6 +17,7 @@ import TitleText from '../components/TitleText';
 import * as coursesActions from '../store/actions/courses';
 import Colors from '../constants/Colors';
 import { useFocusEffect } from '@react-navigation/core';
+import { Chip } from 'react-native-elements';
 
 const PlanScreen = ({ navigation, route }) => {
   const Tab = createMaterialTopTabNavigator();
@@ -40,18 +41,27 @@ const PlanScreen = ({ navigation, route }) => {
   useFocusEffect(
     useCallback(() => {
       loadData();
-    }, [dispatch])
+    }, [dispatch, navigation])
   );
 
   if (!token) {
     return (
       <View style={tw`flex-1 justify-center items-center`}>
-        <Text>请登录!</Text>
-        <Button
-          title="登录"
-          onPress={() => navigation.navigate('AuthScreen')}
-          color={Colors.primary}
+        <Image
+          style={{ width: 200, height: 200, marginBottom: 20 }}
+          source={require('../assets/images/login-bg.png')}
         />
+        <Text style={{ color: 'gray', marginBottom: 50 }}>
+          请登录后再继续学习哦~~
+        </Text>
+        <View style={{ width: 160 }}>
+          <Chip
+            style={tw`w-full`}
+            title="登录"
+            onPress={() => navigation.navigate('AuthScreen')}
+            color={Colors.primary}
+          />
+        </View>
       </View>
     );
   }

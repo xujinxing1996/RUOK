@@ -1,20 +1,21 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import {
-  Button,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   View,
   Alert,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import tw from 'twrnc';
 import { useDispatch } from 'react-redux';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Button, CheckBox, Chip, Text } from 'react-native-elements';
 import Card from '../components/UI/Card';
 import Input from '../components/UI/Input';
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';
+import { getValidCode } from '../store/actions/user';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 let timer = null;
@@ -127,9 +128,18 @@ const AuthScreen = ({ navigation, route }) => {
     }
   };
 
-  const handleClickCode = () => {
+  const handleClickCode = async () => {
     if (formState.inputValues.phoneNumber.trim().length === 0) {
       Alert.alert('错误提示', '请输入手机号码', [
+        {
+          text: '确认',
+        },
+      ]);
+      return;
+    }
+    const resData = await getValidCode(formState.inputValues.phoneNumber);
+    if (resData.code === 500) {
+      Alert.alert('错误提示', resData.msg, [
         {
           text: '确认',
         },
@@ -143,76 +153,82 @@ const AuthScreen = ({ navigation, route }) => {
   let PasswordCmp = (
     <Input
       id="password"
-      label="密码"
       required
+      placeholder="请输入密码"
       errorText="请输入密码"
       autoCapitalize="none"
-r      onInputChange={handleChangeText}
+      r
+      onInputChange={handleChangeText}
     />
   );
   if (!isLogin) {
     PasswordCmp = (
-      <View style={tw`flex-row items-center`}>
-        <Input
-          id="password"
-          label="验证码"
-          initialValue=""
-          required
-          errorText="请输入验证码"
-          onInputChange={handleChangeText}
-        />
-        <Button
-          title={codeBtnIsDisable ? `${codeTimeNum}秒后重试` : '获取验证码'}
-          disabled={codeBtnIsDisable}
-          onPress={handleClickCode}
-        />
+      <View style={tw`flex-row justify-center items-center`}>
+        <View style={tw`flex-1`}>
+          <Input
+            id="password"
+            initialValue=""
+            required
+            placeholder="请输入验证码"
+            errorText="请输入验证码"
+            onInputChange={handleChangeText}
+          />
+        </View>
+        <View style={tw`flex-1`}>
+          <Button
+            type="clear"
+            title={codeBtnIsDisable ? `${codeTimeNum}秒后重试` : '获取验证码'}
+            disabled={codeBtnIsDisable}
+            onPress={handleClickCode}
+          />
+        </View>
       </View>
     );
   }
 
   return (
     <KeyboardAvoidingView
-      style={tw`flex-1`}
+      style={tw`flex-1 items-center bg-white`}
       behavior={Platform.OS === 'android' ? 'height' : 'padding'}
       keyboardVerticalOffset={50}
     >
-      <LinearGradient
-        colors={['#3B82F6', '#3B82a3']}
-        style={tw`flex-1 justify-center items-center`}
-      >
-        <Card style={tw`w-[80%] max-w-[400px] max-h-[400] p-[20px]`}>
-          <ScrollView>
-            <Input
-              id="phoneNumber"
-              label="用户名"
-              keyboardType="phone-pad"
-              initialValue=""
-              required
-              errorText="请输入用户名"
-              onInputChange={handleChangeText}
-            />
-            {PasswordCmp}
-            <View style={tw`mt-[10px]`}>
-              {isLoading ? (
-                <ActivityIndicator size="small" color={Colors.primary} />
-              ) : (
-                <Button
-                  title="登录"
-                  color={Colors.primary}
-                  onPress={handleAuth}
-                />
-              )}
-            </View>
-            <View style={tw`mt-[10px]`}>
-              <Button
-                title={isLogin ? '验证码登录' : '密码登录'}
-                color={Colors.accent}
-                onPress={() => setIsLogin((prevState) => !prevState)}
-              />
-            </View>
-          </ScrollView>
-        </Card>
-      </LinearGradient>
+      <Text style={tw`py-10`} h4>{isLogin ? '手机密码登录' : '验证码登录'}</Text>
+      <View style={tw`w-[300px]`}>
+        <Input
+          id="phoneNumber"
+          // label="用户名"
+          keyboardType="phone-pad"
+          initialValue=""
+          required
+          placeholder="请输入用户名"
+          errorText="请输入用户名"
+          onInputChange={handleChangeText}
+        />
+        {PasswordCmp}
+        <View style={tw`self-start`}>
+          <Button
+            type="clear"
+            title={isLogin ? '验证码登录' : '密码登录'}
+            color={Colors.accent}
+            onPress={() => setIsLogin((prevState) => !prevState)}
+          />
+        </View>
+        <View>
+          {isLoading ? (
+            <ActivityIndicator size="small" color={Colors.primary} />
+          ) : (
+            <Chip title="登录" color={Colors.primary} onPress={handleAuth} />
+          )}
+        </View>
+        <View style={tw`mt-5 flex-row justify-center items-center`}>
+          <CheckBox containerStyle={{ backgroundColor: 'white', borderWidth: 0, padding: 0 }} title="登录即代表已阅读并同意" checked={true} />
+          <Pressable>
+            <Text style={{ color: 'blue' }}>
+            《用户教育协议》
+            </Text>
+          </Pressable>
+        </View>
+      </View>
     </KeyboardAvoidingView>
   );
 };

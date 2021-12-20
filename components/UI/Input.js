@@ -57,12 +57,7 @@ const Input = (props) => {
   };
 
   return (
-    <View style={tw`flex-1`}>
-      <Text
-        style={tw.style('text-base my-2', { fontFamily: 'NotoSansSc-Bold' })}
-      >
-        {props.label}
-      </Text>
+    <View style={tw`p-2`}>
       <TextInput
         {...props}
         style={tw`p-2 border-black border-b`}

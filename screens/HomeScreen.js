@@ -19,7 +19,6 @@ import * as swipersActions from '../store/actions/swipers';
 import * as coursesActions from '../store/actions/courses';
 import * as teachersActions from '../store/actions/teachers';
 import Colors from '../constants/Colors';
-import AsyncStorageLib from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +72,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={tw`flex-1 bg-white`}>
           <View style={tw`mx-3 mb-3 `}>
             <View style={tw`rounded-xl overflow-hidden`}>
-              <Swiper style={tw`h-[180px]`}>
+              <Swiper style={tw`h-[170px]`}>
                 {swipers &&
                   swipers.map((item, index) => {
                     return (
@@ -120,10 +119,19 @@ const HomeScreen = ({ navigation }) => {
                 <BaseText>签到</BaseText>
               </View>
             </View>
-            <Image
-              style={tw`rounded-xl h-[180px]`}
-              source={{ uri: activityImg && activityImg[0].imageUrl }}
-            />
+            <View style={tw`rounded-xl overflow-hidden h-[180px]`}>
+              <View style={tw`absolute top-2 left-2 z-20 p-1.5 rounded-lg overflow-hidden bg-white`}>
+                <Text
+                  style={tw`font-bold`}
+                >
+                  热门活动
+                </Text>
+              </View>
+              <Image
+                style={tw`h-full`}
+                source={{ uri: activityImg && activityImg[0].imageUrl }}
+              />
+            </View>
           </View>
           <ListHeader
             title="精品课程"
@@ -134,7 +142,7 @@ const HomeScreen = ({ navigation }) => {
           {boutiqueCourses.slice(0, 2).map((item) => (
             <CourseGridItem
               onSelectCourse={() => {
-                navigation.navigate('CourseDetail', {
+                navigation.navigate('CourseHomeDetail', {
                   courseId: item.classId,
                 });
               }}
@@ -155,7 +163,7 @@ const HomeScreen = ({ navigation }) => {
           {freeCourses.slice(0, 2).map((item) => (
             <CourseItem
               onSelectCourse={() => {
-                navigation.navigate('CourseDetail', {
+                navigation.navigate('CourseHomeDetail', {
                   courseId: item.classId,
                 });
               }}

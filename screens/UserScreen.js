@@ -14,6 +14,7 @@ import BaseText from '../components/BaseText';
 import * as userActions from '../store/actions/user';
 import Colors from '../constants/Colors';
 import { useFocusEffect } from '@react-navigation/core';
+import { Chip } from 'react-native-elements';
 
 const UserScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -44,12 +45,21 @@ const UserScreen = ({ navigation, route }) => {
   if (!token) {
     return (
       <View style={tw`flex-1 justify-center items-center`}>
-        <Text>请登录!</Text>
-        <Button
-          title="登录"
-          onPress={() => navigation.navigate('UserAuthScreen')}
-          color={Colors.primary}
+        <Image
+          style={{ width: 200, height: 200, marginBottom: 20 }}
+          source={require('../assets/images/login-bg.png')}
         />
+        <Text style={{ color: 'gray', marginBottom: 50 }}>
+          请登录后再继续学习哦~~
+        </Text>
+        <View style={{ width: 160 }}>
+          <Chip
+            style={tw`w-full`}
+            title="登录"
+            onPress={() => navigation.navigate('UserAuthScreen')}
+            color={Colors.primary}
+          />
+        </View>
       </View>
     );
   }
@@ -86,7 +96,7 @@ const UserScreen = ({ navigation, route }) => {
           source={require('../assets/images/user-banner.png')}
         />
       </View>
-      <View style={tw`h-[9px] my-4 bg-gray-200`}></View>
+      <View style={tw`h-[9px] my-4 bg-gray-100`}></View>
       <View>
         <View
           style={tw`px-8 py-2 border-b border-gray-200 flex-row justify-between items-center`}

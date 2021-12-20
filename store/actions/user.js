@@ -26,3 +26,23 @@ export const getUserInfo = () => {
     }
   };
 };
+
+export const getValidCode = async (mobile) => {
+    try {
+      const response = await fetch(
+        `http://121.199.173.63:8007/api/send/sms/validcode?mobile=${mobile}`,
+        {
+          method: 'POST',
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('获取失败');
+      }
+
+      const resData = await response.json();
+      return resData;
+    } catch (error) {
+      console.log(`error`, error);
+    }
+};

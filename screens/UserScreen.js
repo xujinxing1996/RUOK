@@ -34,35 +34,15 @@ const UserScreen = ({ navigation, route }) => {
     }
   };
 
-  useFocusEffect(useCallback(() => {
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     loadData();
+  //   }, [dispatch])
+  // );
+
+  useEffect(() => {
     loadData();
-  }, [dispatch]));
-
-  // useEffect(() => {
-  //   loadData();
-  // }, [navigation, dispatch, route.name]);
-
-  if (!token) {
-    return (
-      <View style={tw`flex-1 justify-center items-center`}>
-        <Image
-          style={{ width: 200, height: 200, marginBottom: 20 }}
-          source={require('../assets/images/login-bg.png')}
-        />
-        <Text style={{ color: 'gray', marginBottom: 50 }}>
-          请登录后再继续学习哦~~
-        </Text>
-        <View style={{ width: 160 }}>
-          <Chip
-            style={tw`w-full`}
-            title="登录"
-            onPress={() => navigation.navigate('UserAuthScreen')}
-            color={Colors.primary}
-          />
-        </View>
-      </View>
-    );
-  }
+  }, [navigation]);
 
   if (isLoading) {
     return (
@@ -81,12 +61,29 @@ const UserScreen = ({ navigation, route }) => {
           {userInfo && userInfo.avatar ? (
             <Image style={tw`w-15 h-15`} source={{ uri: userInfo.avatar }} />
           ) : (
-            <Ionicons name="ios-person" size={35} color="purple" />
+            <Ionicons
+              name="ios-person"
+              color="#687383"
+              size={35}
+              color="purple"
+            />
           )}
         </View>
         <View>
-          <BaseText>{userInfo && userInfo.realName}</BaseText>
-          <BaseText>{userInfo && userInfo.phonenumber}</BaseText>
+          {!token ? (
+            <Pressable
+              onPress={() => {
+                !token && navigation.navigate('UserAuthScreen');
+              }}
+            >
+              <BaseText style="text-gray-500 text-base">请登录</BaseText>
+            </Pressable>
+          ) : (
+            <>
+              <BaseText>{userInfo && userInfo.realName}</BaseText>
+              <BaseText>{userInfo && userInfo.phonenumber}</BaseText>
+            </>
+          )}
         </View>
       </View>
       <View style={tw`rounded-full mx-8 h-12`}>
@@ -101,49 +98,61 @@ const UserScreen = ({ navigation, route }) => {
         <View
           style={tw`px-8 py-2 border-b border-gray-200 flex-row justify-between items-center`}
         >
-          <View style={tw`flex-row`}>
-            <Ionicons name="ios-clipboard" size={20} />
-            <BaseText style="ml-3 font-bold">我的资料</BaseText>
-          </View>
+          <Pressable
+            style={tw`flex-row`}
+            onPress={() => {
+              !token && navigation.navigate('UserAuthScreen');
+            }}
+          >
+            <Ionicons name="ios-clipboard" color="#687383" size={20} />
+            <BaseText style="ml-3 font-bold text-gray-500">我的资料</BaseText>
+          </Pressable>
           <Ionicons name="ios-chevron-forward" color="gray" size={20} />
         </View>
         <Pressable
           style={tw`px-8 py-2 border-b border-gray-200 flex-row justify-between items-center`}
-          onPress={() => navigation.navigate('Settings')}
+          onPress={() =>
+            !token
+              ? navigation.navigate('UserAuthScreen')
+              : navigation.navigate('Settings')
+          }
         >
           <View style={tw`flex-row`}>
-            <Ionicons name="ios-layers" size={20} />
-            <BaseText style="ml-3 font-bold">设置</BaseText>
+            <Ionicons name="ios-layers" color="#687383" size={20} />
+            <BaseText style="ml-3 font-bold text-gray-500">设置</BaseText>
           </View>
           <Ionicons name="ios-chevron-forward" color="gray" size={20} />
         </Pressable>
-        <View
+        <Pressable
           style={tw`px-8 py-2 border-b border-gray-200 flex-row justify-between items-center`}
+          onPress={() => !token && navigation.navigate('UserAuthScreen')}
         >
           <View style={tw`flex-row`}>
-            <Ionicons name="ios-mail" size={20} />
-            <BaseText style="ml-3 font-bold">意见反馈</BaseText>
+            <Ionicons name="ios-mail" color="#687383" size={20} />
+            <BaseText style="ml-3 font-bold text-gray-500">意见反馈</BaseText>
           </View>
           <Ionicons name="ios-chevron-forward" color="gray" size={20} />
-        </View>
-        <View
+        </Pressable>
+        <Pressable
           style={tw`px-8 py-2 border-b border-gray-200 flex-row justify-between items-center`}
+          onPress={() => !token && navigation.navigate('UserAuthScreen')}
         >
           <View style={tw`flex-row`}>
-            <Ionicons name="ios-map" size={20} />
-            <BaseText style="ml-3 font-bold">课程协议</BaseText>
+            <Ionicons name="ios-map" color="#687383" size={20} />
+            <BaseText style="ml-3 font-bold text-gray-500">课程协议</BaseText>
           </View>
           <Ionicons name="ios-chevron-forward" color="gray" size={20} />
-        </View>
-        <View
+        </Pressable>
+        <Pressable
           style={tw`px-8 py-2 border-b border-gray-200 flex-row justify-between items-center`}
+          onPress={() => !token && navigation.navigate('UserAuthScreen')}
         >
           <View style={tw`flex-row`}>
-            <Ionicons name="ios-information-circle" size={20} />
-            <BaseText style="ml-3 font-bold">关于我们</BaseText>
+            <Ionicons name="ios-information-circle" color="#687383" size={20} />
+            <BaseText style="ml-3 font-bold text-gray-500">关于我们</BaseText>
           </View>
           <Ionicons name="ios-chevron-forward" color="gray" size={20} />
-        </View>
+        </Pressable>
       </View>
     </View>
   );

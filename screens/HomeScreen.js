@@ -7,6 +7,7 @@ import {
   View,
   Text,
   Button,
+  Pressable,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,14 +37,14 @@ const HomeScreen = ({ navigation }) => {
     try {
       await dispatch(swipersActions.fetchSiwpers());
       await dispatch(swipersActions.fetchActivityImg());
-      await dispatch(coursesActions.fetchBoutiqueCourses(1, 2));
-      await dispatch(coursesActions.fetchFreeCourses(1, 2));
+      await dispatch(coursesActions.fetchBoutiqueCourses(1, 2, false));
+      await dispatch(coursesActions.fetchFreeCourses(1, 2, false));
       await dispatch(teachersActions.fetchGetTeachers(1, 3));
     } catch (err) {
       setError(err.message);
     }
     setIsLoading(false);
-  }, [dispatch, setIsLoading, setError]);
+  }, [dispatch]);
 
   useEffect(() => {
     loadData();
@@ -72,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={tw`flex-1 bg-white`}>
           <View style={tw`mx-3 mb-3 `}>
             <View style={tw`rounded-xl overflow-hidden`}>
-              <Swiper style={tw`h-[170px]`}>
+              <Swiper autoplay={true} style={tw`h-[170px]`}>
                 {swipers &&
                   swipers.map((item, index) => {
                     return (
@@ -97,20 +98,23 @@ const HomeScreen = ({ navigation }) => {
                 />
                 <BaseText>活动中心</BaseText>
               </View>
-              <View style={tw`flex-1 items-center`}>
+              <Pressable
+                onPress={() => navigation.navigate('FreeCourse', { isFree: false })}
+                style={tw`flex-1 items-center`}
+              >
                 <Image
                   style={tw`w-[45px] h-[45px]`}
                   source={require('../assets/images/remen.jpg')}
                 />
                 <BaseText>热门课程</BaseText>
-              </View>
-              <View style={tw`flex-1 items-center`}>
+              </Pressable>
+              <Pressable onPress={() => navigation.navigate('Teachers')} style={tw`flex-1 items-center`}>
                 <Image
                   style={tw`w-[45px] h-[45px]`}
                   source={require('../assets/images/teacher.jpg')}
                 />
                 <BaseText>名师排行</BaseText>
-              </View>
+              </Pressable>
               <View style={tw`flex-1 items-center`}>
                 <Image
                   style={tw`w-[45px] h-[45px]`}
@@ -120,12 +124,10 @@ const HomeScreen = ({ navigation }) => {
               </View>
             </View>
             <View style={tw`rounded-xl overflow-hidden h-[180px]`}>
-              <View style={tw`absolute top-2 left-2 z-20 p-1.5 rounded-lg overflow-hidden bg-white`}>
-                <Text
-                  style={tw`font-bold`}
-                >
-                  热门活动
-                </Text>
+              <View
+                style={tw`absolute top-2 left-2 z-20 p-1.5 rounded-lg overflow-hidden bg-white`}
+              >
+                <Text style={tw`font-bold`}>热门活动</Text>
               </View>
               <Image
                 style={tw`h-full`}
@@ -142,6 +144,7 @@ const HomeScreen = ({ navigation }) => {
           {boutiqueCourses.slice(0, 2).map((item) => (
             <CourseGridItem
               onSelectCourse={() => {
+                console.log('classId', item.classId);
                 navigation.navigate('CourseHomeDetail', {
                   courseId: item.classId,
                 });

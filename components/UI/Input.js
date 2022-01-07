@@ -60,10 +60,10 @@ const Input = (props) => {
     <View style={tw`p-2`}>
       <TextInput
         {...props}
-        style={tw`p-2 border-black border-b`}
+        style={tw`p-2 border-gray-400 border-b`}
         value={inputState.value}
         onChangeText={handleChangeText}
-        onBlur={handleMissFocus}
+        onFocus={handleMissFocus}
       />
       {!inputState.isValid && inputState.touched && (
         <View style={tw`my-2`}>

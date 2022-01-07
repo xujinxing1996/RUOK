@@ -3,16 +3,18 @@ import {
   View,
   Text,
   FlatList,
-  Button,
   ActivityIndicator,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
+import { BottomSheet, Button, ListItem } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import MoreCourseItem from '../components/MoreCourseItem';
 import Colors from '../constants/Colors';
 import * as coursesAction from '../store/actions/courses';
+import { commonStyle } from '../styles';
 
 const selectedItem = {
   title: '项目筛选',
@@ -92,60 +94,44 @@ const Dropdown = (props) => {
   );
 };
 
-const fetchGetFilters = async () => {
-  try {
-    const response = await fetch(
-      'http://121.199.173.63:8007/api/open/interface/getResult',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          interfaceCode: 'SI0004',
-        }),
-      }
-    );
-    const resData = await response.json();
-    return resData.data.map((item) => ({
-      label: item.dictName,
-      value: item.dictValue,
-    }));
-  } catch (error) {
-    console.log(`error`, error);
-  }
-};
-
 const FreeCourseScreen = ({ navigation, route }) => {
   const { isFree } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [list, setList] = useState([]);
   const [error, setError] = useState();
-  const [options, setOptions] = useState([
-    { label: 'Latest repositories', value: 'latestRelated' },
-    { label: 'Highest rated repositories', value: 'highestRated' },
-    { label: 'Lowest rated repositories', value: 'lowestRated' },
-  ]);
   const freeCourses = useSelector((state) => state.courses.freeCourses);
   const boutiqueCourses = useSelector((state) => state.courses.boutiqueCourses);
+  const projectOptions = useSelector((state) => state.courses.projectOptions);
   const dispatch = useDispatch();
 
   const loadData = useCallback(async () => {
     setError(null);
     setIsRefreshing(true);
     try {
-      const resData = await fetchGetFilters();
-      setOptions(resData);
+      await dispatch(coursesAction.fetchProjectOptions());
       if (isFree) {
-        await dispatch(coursesAction.fetchFreeCourses(1, 10));
+        await dispatch(coursesAction.fetchFreeCourses(1, 10, false));
       } else {
-        await dispatch(coursesAction.fetchBoutiqueCourses(1, 10));
+        await dispatch(coursesAction.fetchBoutiqueCourses(1, 10, false));
       }
     } catch (error) {
       setError(error.message);
     }
     setIsRefreshing(false);
-  }, [dispatch, setIsLoading, setError]);
+  }, [dispatch]);
+
+  const handleFilterClick = () => {
+    const options = projectOptions.concat({
+      dictName: '取消',
+      containerStyle: { backgroundColor: Colors.primary },
+      titleStyle: { color: 'white' },
+      onPress: () => setIsVisible(false),
+    });
+    setList(options);
+    setIsVisible(true);
+  };
 
   useEffect(async () => {
     navigation.setOptions({
@@ -189,22 +175,62 @@ const FreeCourseScreen = ({ navigation, route }) => {
 
   const filterCmp = () => {
     return (
-      <View>
-        <Dropdown options={options} />
+      <View style={tw`flex-row`}>
+        <Button
+          title="项目"
+          buttonStyle={{
+            width: 100,
+            backgroundColor: '#e5e7eb',
+            borderWidth: 2,
+            borderColor: 'white',
+            borderRadius: 30,
+            paddingHorizontal: 15,
+          }}
+          titleStyle={{ color: '#000' }}
+          onPress={handleFilterClick}
+        />
+        <Button
+          title="科目"
+          buttonStyle={{
+            width: 100,
+            backgroundColor: '#e5e7eb',
+            borderWidth: 2,
+            borderColor: 'white',
+            borderRadius: 30,
+            paddingHorizontal: 15,
+          }}
+          titleStyle={{ color: '#000' }}
+          onPress={handleFilterClick}
+        />
       </View>
     );
   };
 
   return (
-    <FlatList
-      style={tw`flex-1 px-3 bg-white`}
-      refreshing={isRefreshing}
-      onRefresh={loadData}
-      data={isFree ? freeCourses : boutiqueCourses}
-      keyExtractor={(item) => item.classId}
-      ListHeaderComponent={filterCmp}
-      renderItem={renderGridItem}
-    />
+    <View style={tw`flex-1`}>
+      <BottomSheet modalProps={{}} isVisible={isVisible}>
+        {list.map((l, i) => (
+          <ListItem
+            key={i}
+            containerStyle={l.containerStyle}
+            onPress={l.onPress}
+          >
+            <ListItem.Content>
+              <ListItem.Title style={l.titleStyle}>{l.dictName}</ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+        ))}
+      </BottomSheet>
+      <FlatList
+        style={tw`flex-1 px-3 bg-white`}
+        refreshing={isRefreshing}
+        onRefresh={loadData}
+        data={isFree ? freeCourses : boutiqueCourses}
+        keyExtractor={(item) => item.classId}
+        ListHeaderComponent={filterCmp}
+        renderItem={renderGridItem}
+      />
+    </View>
   );
 };
 

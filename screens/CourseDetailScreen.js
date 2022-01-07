@@ -3,12 +3,11 @@ import {
   View,
   ScrollView,
   SafeAreaView,
-  Button,
   Image,
   ActivityIndicator,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Tab, TabView } from 'react-native-elements';
+import { Tab, TabView, Button } from 'react-native-elements';
 import tw from 'twrnc';
 import BaseText from '../components/BaseText';
 import TitleText from '../components/TitleText';
@@ -20,15 +19,14 @@ const CourseDetail = ({ navigation, route }) => {
   const { courseId } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [index, setIndex] = useState(0);
-  const [expanded, setExpanded] = useState(false);
   const selectedCourse = useSelector((state) => state.courses.courseInfo);
   const dispatch = useDispatch();
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
-    await dispatch(coursesActions.fetchDetailCourse(1));
+    await dispatch(coursesActions.fetchDetailCourse(courseId));
     setIsLoading(false);
-  }, [dispatch, setIsLoading]);
+  }, [dispatch]);
 
   const handleStartStudy = () => {
     if (route.name === 'CourseHomeDetail') {
@@ -94,7 +92,11 @@ const CourseDetail = ({ navigation, route }) => {
             ))}
           </View>
           <View style={tw`h-[9px] bg-gray-100`}></View>
-          <Tab value={index} onChange={setIndex}>
+          <Tab
+            value={index}
+            onChange={setIndex}
+            indicatorStyle={{ backgroundColor: Colors.primary }}
+          >
             <Tab.Item
               titleStyle={{ color: index === 0 ? Colors.primary : '#000' }}
               containerStyle={{ backgroundColor: '#fff' }}
@@ -117,17 +119,33 @@ const CourseDetail = ({ navigation, route }) => {
             </TabView.Item>
             <TabView.Item style={tw`w-full`}>
               <View style={tw`w-full`}>
-                {selectedCourse.catalogueList &&
-                  selectedCourse.catalogueList.map((video) => {
-                    return (
-                      <ListAccordion key={video.catalogueId} video={video} />
-                    );
-                  })}
+                {selectedCourse.catalogueList.map((video) => {
+                  return (
+                    <ListAccordion
+                      key={video.catalogueId}
+                      video={video}
+                    />
+                  );
+                })}
               </View>
             </TabView.Item>
           </TabView>
-          <View style={tw`rounded-xl mb-7 items-center`}>
-            <Button onPress={handleStartStudy} title="开始学习" />
+          <View style={tw`items-center`}>
+            <Button
+              title="开始学习"
+              buttonStyle={{
+                backgroundColor: 'rgba(90, 154, 230, 1)',
+                borderColor: 'transparent',
+                borderWidth: 0,
+                borderRadius: 30,
+              }}
+              containerStyle={{
+                width: 200,
+                marginHorizontal: 50,
+                marginVertical: 10,
+              }}
+              onPress={handleStartStudy}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>

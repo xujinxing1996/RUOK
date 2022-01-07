@@ -44,14 +44,8 @@ const HomeNavigator = () => {
 
 const CoursesNavigator = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{ headerTitleAlign: 'center', headerShadowVisible: false }}
-    >
-      <Stack.Screen
-        name="Course"
-        component={CoursesScreen}
-        options={{ title: '课程' }}
-      />
+    <Stack.Navigator>
+      <Stack.Screen name="Course" component={CoursesScreen} />
     </Stack.Navigator>
   );
 };
@@ -92,11 +86,6 @@ const UserInfoNavigator = () => {
         component={SettingScreen}
         options={{ title: '设置' }}
       />
-      <Stack.Screen
-        name="UserAuthScreen"
-        component={AuthScreen}
-        options={{ title: '' }}
-      />
     </Stack.Navigator>
   );
 };
@@ -110,6 +99,7 @@ const CourseTabNavigator = () => {
         headerTitleAlign: 'center',
         tabBarActiveTintColor: '#3b82f6',
         headerShadowVisible: false,
+        tabBarHideOnKeyboard: true,
       }}
     >
       <Tab.Screen
@@ -170,7 +160,7 @@ const CourseTabNavigator = () => {
 const MainNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShadowVisible: false }}>
         <Stack.Screen
           name="StartUp"
           options={{ headerShown: false }}
@@ -221,6 +211,11 @@ const MainNavigator = () => {
           name="AuthScreen"
           component={AuthScreen}
           options={{ title: '', headerBackTitle: '学习' }}
+        />
+        <Stack.Screen
+          name="UserAuthScreen"
+          component={AuthScreen}
+          options={{ title: '' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

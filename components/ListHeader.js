@@ -10,7 +10,7 @@ const ListHeader = ({ title, onSelect }) => {
         {title}
       </Text>
       <Pressable onPress={onSelect}>
-        <Icon name="ios-chevron-forward" type="ionicon" />
+        <Icon name="ios-chevron-forward" color="gray" type="ionicon" />
       </Pressable>
     </View>
   );

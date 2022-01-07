@@ -17,7 +17,7 @@ const MoreCourseItem = ({
         </Text>
         <Text numberOfLines={1} style={tw`text-sm text-gray-400 my-3`}>{description}</Text>
         <Pressable
-          style={tw`flex-1 self-end justify-end`}
+          style={tw`self-end justify-end`}
           onPress={onSelectCourse}
         >
           <Text style={tw`text-sm text-blue-500`}>查看详情</Text>

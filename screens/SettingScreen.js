@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Pressable, Button } from 'react-native';
+import { Chip } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import BaseText from '../components/BaseText';
+import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';
 
 const SettingScreen = ({ navigation }) => {
@@ -14,7 +16,7 @@ const SettingScreen = ({ navigation }) => {
     dispatch(authActions.logout());
     navigation.navigate('UserInfo');
   };
-  
+
   return (
     <View style={tw`bg-white h-full`}>
       <View style={tw`mb-5`}>
@@ -36,7 +38,9 @@ const SettingScreen = ({ navigation }) => {
           <Ionicons name="ios-chevron-forward" color="gray" size={20} />
         </Pressable>
       </View>
-      <Button title="退出登录" onPress={handleLogout} />
+      <View style={tw`mx-2`}>
+        <Chip title="退出登录" color={Colors.primary} onPress={handleLogout} />
+      </View>
     </View>
   );
 };

@@ -99,14 +99,6 @@ const AuthScreen = ({ navigation, route }) => {
   );
 
   const handleAuth = async () => {
-    if (!formState.formIsValid) {
-      Alert.alert('提示', '请输入用户名和密码', [
-        {
-          text: '确认',
-        },
-      ]);
-      return;
-    }
     setError(null);
     setIsLoading(true);
     try {
@@ -154,6 +146,7 @@ const AuthScreen = ({ navigation, route }) => {
     <Input
       id="password"
       required
+      secureTextEntry={true}
       placeholder="请输入密码"
       errorText="请输入密码"
       autoCapitalize="none"
@@ -192,8 +185,10 @@ const AuthScreen = ({ navigation, route }) => {
       behavior={Platform.OS === 'android' ? 'height' : 'padding'}
       keyboardVerticalOffset={50}
     >
-      <Text style={tw`py-10`} h4>{isLogin ? '手机密码登录' : '验证码登录'}</Text>
-      <View style={tw`w-[300px]`}>
+      <Text style={tw`py-10`} h4>
+        {isLogin ? '手机密码登录' : '验证码登录'}
+      </Text>
+      <View style={tw`w-4/5`}>
         <Input
           id="phoneNumber"
           // label="用户名"
@@ -209,6 +204,7 @@ const AuthScreen = ({ navigation, route }) => {
           <Button
             type="clear"
             title={isLogin ? '验证码登录' : '密码登录'}
+            titleStyle={tw`text-sm`}
             color={Colors.accent}
             onPress={() => setIsLogin((prevState) => !prevState)}
           />
@@ -220,13 +216,22 @@ const AuthScreen = ({ navigation, route }) => {
             <Chip title="登录" color={Colors.primary} onPress={handleAuth} />
           )}
         </View>
-        <View style={tw`mt-5 flex-row justify-center items-center`}>
-          <CheckBox containerStyle={{ backgroundColor: 'white', borderWidth: 0, padding: 0 }} title="登录即代表已阅读并同意" checked={true} />
-          <Pressable>
-            <Text style={{ color: 'blue' }}>
-            《用户教育协议》
-            </Text>
-          </Pressable>
+        <View style={tw`mt-5 text-sm flex-row justify-start items-center`}>
+          <CheckBox
+            containerStyle={{
+              backgroundColor: '#fff',
+              borderWidth: 0,
+              padding: 0,
+              margin: 0,
+            }}
+            title="已阅读并同意"
+            checkedIcon="dot-circle-o"
+            uncheckedIcon="circle-o"
+            checked={true}
+          />
+          <Text style={{ margin: 0, color: 'blue' }}>
+            《宏宇教育用户教育协议》
+          </Text>
         </View>
       </View>
     </KeyboardAvoidingView>

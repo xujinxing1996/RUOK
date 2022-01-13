@@ -1,7 +1,12 @@
-import { SET_ACTIVITY_IMG, SET_SWIPERS } from '../actions/swipers';
+import {
+  SET_ACTIVITY_IMG,
+  SET_COURSES_SWIPERS,
+  SET_SWIPERS,
+} from '../actions/swipers';
 
 const initialState = {
   swiperImgs: [],
+  coursesSwiperImgs: [],
   activityImg: null,
 };
 
@@ -11,6 +16,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         swiperImgs: action.products,
+      };
+    case SET_COURSES_SWIPERS:
+      return {
+        ...state,
+        coursesSwiperImgs: action.products,
       };
     case SET_ACTIVITY_IMG:
       return {

@@ -14,6 +14,7 @@ import TitleText from '../components/TitleText';
 import * as coursesActions from '../store/actions/courses';
 import Colors from '../constants/Colors';
 import ListAccordion from '../components/ListAccordion';
+import { Ionicons } from '@expo/vector-icons';
 
 const CourseDetail = ({ navigation, route }) => {
   const { courseId } = route.params;
@@ -80,15 +81,20 @@ const CourseDetail = ({ navigation, route }) => {
           <View style={tw`h-[9px] bg-gray-100`}></View>
           <View style={tw`p-4 flex-row border-b border-gray-300`}>
             <BaseText style="mr-6 text-gray-400">特色服务</BaseText>
+            <Ionicons style={tw`mr-1`} name="checkmark-circle-outline" color="green" size={20} />
             <BaseText style="mr-6 text-gray-400">报考指导</BaseText>
+            <Ionicons style={tw`mr-1`} name="checkmark-circle-outline" color="green" size={20} />
             <BaseText style="text-gray-400">名师教学</BaseText>
           </View>
           <View style={tw`p-4 flex-row text-gray-400 border-b border-gray-300`}>
             <BaseText style="mr-6 text-gray-400">课程保障</BaseText>
-            {selectedCourse.courseGuarantee.map((item) => (
+            {selectedCourse.courseGuarantee.map((item, index) => (
+              <>
+              <Ionicons key={index} style={tw`mr-1`} name="checkmark-circle-outline" color="green" size={20} />
               <BaseText key={item} style="mr-6 text-gray-400">
                 {item}
               </BaseText>
+              </>
             ))}
           </View>
           <View style={tw`h-[9px] bg-gray-100`}></View>
@@ -109,44 +115,56 @@ const CourseDetail = ({ navigation, route }) => {
             />
           </Tab>
 
-          <TabView value={index} onChange={setIndex} style={tw`h-1/3`}>
+          <TabView value={index} onChange={setIndex}>
             <TabView.Item>
-              <View style={tw`p-3`}>
+              <View style={tw`p-3 flex-1 justify-between items-center`}>
                 <BaseText>
                   {selectedCourse.courseDescription || '无内容'}
                 </BaseText>
+                <Button
+                  title="开始学习"
+                  buttonStyle={{
+                    backgroundColor: 'rgba(90, 154, 230, 1)',
+                    borderColor: 'transparent',
+                    borderWidth: 0,
+                    borderRadius: 30,
+                  }}
+                  containerStyle={{
+                    width: 200,
+                    marginHorizontal: 50,
+                    marginVertical: 10,
+                  }}
+                  onPress={handleStartStudy}
+                />
               </View>
             </TabView.Item>
-            <TabView.Item style={tw`w-full`}>
-              <View style={tw`w-full`}>
-                {selectedCourse.catalogueList.map((video) => {
-                  return (
-                    <ListAccordion
-                      key={video.catalogueId}
-                      video={video}
-                    />
-                  );
-                })}
+            <TabView.Item>
+              <View style={tw`p-3 flex-1 justify-between items-center`}>
+                <View style={tw`w-full`}>
+                  {selectedCourse.catalogueList.map((video) => {
+                    return (
+                      <ListAccordion key={video.catalogueId} video={video} />
+                    );
+                  })}
+                </View>
+                <Button
+                  title="开始学习"
+                  buttonStyle={{
+                    backgroundColor: 'rgba(90, 154, 230, 1)',
+                    borderColor: 'transparent',
+                    borderWidth: 0,
+                    borderRadius: 30,
+                  }}
+                  containerStyle={{
+                    width: 200,
+                    marginHorizontal: 50,
+                    marginVertical: 10,
+                  }}
+                  onPress={handleStartStudy}
+                />
               </View>
             </TabView.Item>
           </TabView>
-          <View style={tw`items-center`}>
-            <Button
-              title="开始学习"
-              buttonStyle={{
-                backgroundColor: 'rgba(90, 154, 230, 1)',
-                borderColor: 'transparent',
-                borderWidth: 0,
-                borderRadius: 30,
-              }}
-              containerStyle={{
-                width: 200,
-                marginHorizontal: 50,
-                marginVertical: 10,
-              }}
-              onPress={handleStartStudy}
-            />
-          </View>
         </ScrollView>
       </SafeAreaView>
     )

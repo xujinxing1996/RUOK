@@ -6,7 +6,9 @@ export const SET_DETAIL_COURSE = 'SET_DETAIL_COURSE';
 export const SET_ALL_COURSES = 'SET_ALL_COURSES';
 export const SET_USER_COURSES = 'SET_USER_COURSES';
 export const SET_PROJECT_OPTIONS = 'SET_PROJECT_OPTIONS';
+export const SEt_PROJECT_CLASSES = SEt_PROJECT_CLASSES;
 export const SET_CLASS_OPTIONS = 'SET_CLASS_OPTIONS';
+export const SET_SUBJECT_OPTIONS = 'SET_SUBJECT_OPTIONS';
 
 const loadMoreData = (getState, isFooter, data) => {
   const products = isFooter
@@ -124,6 +126,56 @@ export const fetchProjectOptions = () => {
       }
       const resData = await response.json();
       dispatch({ type: SET_PROJECT_OPTIONS, products: resData.data });
+    } catch (error) {}
+  };
+};
+
+export const fetchSubjectOptions = (projectCode) => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(
+        'http://121.199.173.63:8007/api/open/interface/getResult',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            interfaceCode: 'SI0005',
+            params: {
+              projectCode,
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('请求错误');
+      }
+      const resData = await response.json();
+      dispatch({ type: SET_SUBJECT_OPTIONS, products: resData.data });
+    } catch (error) {}
+  };
+};
+
+export const fetchProjectClass = (projectCodecode) => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(
+        'http://121.199.173.63:8007/api/open/interface/getResult',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            interfaceCode: 'SI0005',
+            projectCode,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('请求错误');
+      }
+      const resData = await response.json();
+      dispatch({ type: SEt_PROJECT_CLASSES, products: resData.data });
     } catch (error) {}
   };
 };

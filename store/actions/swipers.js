@@ -1,7 +1,8 @@
 export const SET_SWIPERS = 'SET_SWIPERS';
 export const SET_ACTIVITY_IMG = 'SET_ACTIVITY_IMG';
+export const SET_COURSES_SWIPERS = 'SET_COURSES_SWIPERS';
 
-export const fetchSiwpers = () => {
+export const fetchSiwpers = (interfaceCode) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
@@ -12,7 +13,7 @@ export const fetchSiwpers = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            interfaceCode: 'SI0001',
+            interfaceCode,
           }),
         }
       );
@@ -22,7 +23,7 @@ export const fetchSiwpers = () => {
       }
 
       const resData = await response.json();
-      dispatch({ type: SET_SWIPERS, products: resData.data });
+      dispatch({ type: interfaceCode === 'SI0001' ? SET_SWIPERS : SET_COURSES_SWIPERS, products: resData.data });
     } catch (error) {}
   };
 };

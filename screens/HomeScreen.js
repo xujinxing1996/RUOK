@@ -35,7 +35,7 @@ const HomeScreen = ({ navigation }) => {
     setError(null);
     setIsLoading(true);
     try {
-      await dispatch(swipersActions.fetchSiwpers());
+      await dispatch(swipersActions.fetchSiwpers('SI0001'));
       await dispatch(swipersActions.fetchActivityImg());
       await dispatch(coursesActions.fetchBoutiqueCourses(1, 2, false));
       await dispatch(coursesActions.fetchFreeCourses(1, 2, false));

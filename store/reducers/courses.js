@@ -4,7 +4,9 @@ import {
   SET_BOUTIQUE_COURSES,
   SET_DETAIL_COURSE,
   SET_FREE_COURSES,
+  SEt_PROJECT_CLASSES,
   SET_PROJECT_OPTIONS,
+  SET_SUBJECT_OPTIONS,
   SET_USER_COURSES,
 } from '../actions/courses';
 
@@ -16,6 +18,7 @@ const initialState = {
   allCourses: [],
   userCourses: [],
   projectOptions: [],
+  subjectOptions: [],
   classOptions: [],
 };
 
@@ -50,6 +53,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         projectOptions: action.products,
+      };
+    case SET_SUBJECT_OPTIONS:
+      return {
+        ...state,
+        subjectOptions: action.products,
+      };
+    case SEt_PROJECT_CLASSES:
+      return {
+        ...state,
+        projectClasses: action.products,
       };
   }
   return state;

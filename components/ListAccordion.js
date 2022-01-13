@@ -8,7 +8,7 @@ const ListAccordion = ({ video, onClickVideo = null }) => {
   const isHaveChildren = !!video.medias;
   return (
     <ListItem.Accordion
-      style={tw`bg-white ${isHaveChildren ? 'ml-3 bg-black' : ''}`}
+      style={tw`bg-white flex-1 ${isHaveChildren ? 'ml-3 bg-black' : ''}`}
       content={
         <>
           <View style={tw`flex-1 flex-row items-center`}>

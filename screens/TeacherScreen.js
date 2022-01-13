@@ -3,6 +3,7 @@ import { FlatList, View, Text, ActivityIndicator, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import BaseText from '../components/BaseText';
+import TooltipMessage from '../components/TooltipMessage';
 import Colors from '../constants/Colors';
 import * as teachersAction from '../store/actions/teachers';
 
@@ -58,7 +59,7 @@ const TeacherScreen = ({ navigation }) => {
       data={teachers}
       refreshing={isRefreshing}
       onRefresh={loadData}
-      renderItem={TeacherItem}
+      renderItem={({ item }) => <TooltipMessage item={item} />}
       keyExtractor={(item) => item.teacherId}
     />
   );

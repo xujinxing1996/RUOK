@@ -15,8 +15,9 @@ const CoursesScreen = ({ navigation }) => {
   const [error, setError] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const [list, setList] = useState([]);
-  const [subjectList, setSubjectList] = useState([]);
   const [pageInfo, setPageInfo] = useState({ page: 1 });
+  const [selectProjectName, setSelectProjectName] = useState('项目');
+  const [selectSubjectName, setSelectSubjectName] = useState('科目');
   const [selectClassName, setSelectClassName] = useState({
     title: '全部课程',
     code: 'SI0009',
@@ -39,6 +40,7 @@ const CoursesScreen = ({ navigation }) => {
   const handleFilterClick = () => {
     projectOptions.forEach((option) => {
       option.onPress = async () => {
+        setSelectProjectName(option.dictName);
         await dispatch(coursesAction.fetchSubjectOptions(option.dictValue));
         setIsVisible(false);
       };
@@ -54,6 +56,13 @@ const CoursesScreen = ({ navigation }) => {
   };
 
   const handleFilterSubjectClick = () => {
+    subjectOptions.forEach((option) => {
+      option.onPress = async () => {
+        setSelectSubjectName(option.dictName);
+        await dispatch(coursesAction.fetchSubjectOptions(option.dictValue));
+        setIsVisible(false);
+      };
+    });
     const options = subjectOptions.concat({
       dictName: '取消',
       containerStyle: { backgroundColor: Colors.primary },
@@ -164,20 +173,20 @@ const CoursesScreen = ({ navigation }) => {
           <View>
             <View style={tw`flex-row`}>
               <Button
-                title="项目"
+                title={selectProjectName}
                 buttonStyle={styles.filterBtn}
                 titleStyle={{ color: '#000' }}
                 onPress={handleFilterClick}
               />
               <Button
-                title="科目"
+                title={selectSubjectName}
                 buttonStyle={styles.filterBtn}
                 titleStyle={{ color: '#000' }}
                 onPress={handleFilterSubjectClick}
               />
             </View>
             <View style={tw`rounded-xl overflow-hidden`}>
-              <Swiper autoplay={true} style={tw`h-[200px] my-1.5`}>
+              <Swiper autoplay={true} autoplayTimeout={4} style={tw`h-[200px] my-1.5`}>
                 {swipers &&
                   swipers.map((item, index) => {
                     return (

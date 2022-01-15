@@ -13,7 +13,7 @@ const TooltipMessage = ({ item }) => {
       style={tw`p-3.5 m-2 rounded-xl border border-gray-400 flex-row justify-between`}
     >
       <Image
-        style={tw`w-[40%] h-full rounded-xl`}
+        style={tw`w-[40%] h-[140px] rounded-xl`}
         source={{ uri: item.teacherImage }}
       />
       <View style={tw`w-[50%]`}>
@@ -26,18 +26,6 @@ const TooltipMessage = ({ item }) => {
               {item.teacherDesc}
             </BaseText>
           </Pressable>
-        {/* <Tooltip
-          isVisible={showTip}
-          placement="bottom"
-          onClose={() => setShowTip(false)}
-          content={<Text>{item.teacherDesc}</Text>}
-        >
-          <Pressable onPress={() => setShowTip(true)}>
-            <BaseText style="text-gray-500" numberOfLines={4}>
-              {item.teacherDesc}
-            </BaseText>
-          </Pressable>
-        </Tooltip> */}
       </View>
     </View>
   );

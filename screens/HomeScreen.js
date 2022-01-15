@@ -73,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={tw`flex-1 bg-white`}>
           <View style={tw`mx-3 mb-3 `}>
             <View style={tw`rounded-xl overflow-hidden`}>
-              <Swiper autoplay={true} style={tw`h-[170px]`}>
+              <Swiper autoplay={true} autoplayTimeout={4} style={tw`h-[170px]`}>
                 {swipers &&
                   swipers.map((item, index) => {
                     return (

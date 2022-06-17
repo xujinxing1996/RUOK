@@ -1,3 +1,4 @@
+import API_URL from '../../constants/Config';
 import { LOGOUT } from './auth';
 
 export const SET_USER_INFO = 'SET_USER_INFO';
@@ -8,7 +9,7 @@ export const getUserInfo = () => {
     const token = getState().auth.token;
     try {
       const response = await fetch(
-        'http://124.71.1.231/api/system/user/profile',
+        `${API_URL}/system/user/profile`,
         {
           method: 'GET',
           headers: {
@@ -37,7 +38,7 @@ export const resetUserInfo = () => {
 export const getValidCode = async (mobile) => {
   try {
     const response = await fetch(
-      `http://124.71.1.231/api/send/sms/validcode?mobile=${mobile}`,
+      `${API_URL}/send/sms/validcode?mobile=${mobile}`,
       {
         method: 'POST',
       }

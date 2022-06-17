@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { Video } from 'expo-av';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import ListAccordion from '../components/ListAccordion';
+import API_URL from '../constants/Config';
 
 const videoType = {
   1: '视频',
@@ -99,7 +100,7 @@ const VideoDetailScreen = ({ navigation, route }) => {
 
   const savePositionMillis = (mediaId) => {
     if (mediaId && token) {
-      fetch('http://124.71.1.231/api/train/watchLog/recordWatchLog', {
+      fetch(`${API_URL}/train/watchLog/recordWatchLog`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +116,7 @@ const VideoDetailScreen = ({ navigation, route }) => {
 
   const getPositionMillis = async (mediaId) => {
     const response = await fetch(
-      'http://124.71.1.231/api/open/interface/getMediaPlayProcess',
+      `${API_URL}/open/interface/getMediaPlayProcess`,
       {
         method: 'POST',
         headers: {

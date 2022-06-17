@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TOKEN } from '../../constants/Auth';
+import API_URL from '../../constants/Config';
 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const LOGOUT = 'LOGOUT';
@@ -10,7 +11,7 @@ export const authenticate = (token) => {
 
 export const login = (phoneNumber, password, isLogin) => {
   return async (dispatch) => {
-    let url = 'http://124.71.1.231/api/login';
+    let url = `${API_URL}/login`;
     let data = {
       code: 'CHUJIEKEJI',
       interfaceCode: 'TN0001',
@@ -19,7 +20,7 @@ export const login = (phoneNumber, password, isLogin) => {
       uuid: '123',
     };
     if (!isLogin) {
-      url = 'http://124.71.1.231/api/authentication/mobile';
+      url = `${API_URL}/authentication/mobile`;
       data = {
         code: 'CHUJIEKEJI',
         mobile: phoneNumber,
@@ -47,7 +48,7 @@ export const login = (phoneNumber, password, isLogin) => {
 export const getCode = (phoneNumber) => {
   return async (dispatch) => {
     const response = await fetch(
-      `http://124.71.1.231/api/send/sms/validcode?mobile=${phoneNumber}`,
+      `${API_URL}/send/sms/validcode?mobile=${phoneNumber}`,
       {
         method: 'GET',
       }

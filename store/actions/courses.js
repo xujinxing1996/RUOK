@@ -1,3 +1,4 @@
+import API_URL from '../../constants/Config';
 import { LOGOUT } from './auth';
 
 export const SET_BOUTIQUE_COURSES = 'SET_BOUTIQUE_COURSES';
@@ -24,7 +25,7 @@ const loadMoreData = (getState, isFooter, data) => {
 export const fetchGetCourses = (page, size, params, isFooter, interfaceCode) => {
   return async (dispatch, getState) => {
     const response = await fetch(
-      'http://124.71.1.231/api/open/interface/getResult',
+      `${API_URL}/open/interface/getResult`,
       {
         method: 'POST',
         headers: {
@@ -53,7 +54,7 @@ export const fetchFreeCourses = (page, size, params, isFooter) => {
   return async (dispatch, getState) => {
     try {
       const response = await fetch(
-        'http://124.71.1.231/api/open/interface/getResult',
+        `${API_URL}/open/interface/getResult`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -83,7 +84,7 @@ export const fetchBoutiqueCourses = (page, size, params, isFooter) => {
   return async (dispatch, getState) => {
     try {
       const response = await fetch(
-        'http://124.71.1.231/api/open/interface/getResult',
+        `${API_URL}/open/interface/getResult`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -113,7 +114,7 @@ export const fetchProjectOptions = () => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        'http://124.71.1.231/api/open/interface/getResult',
+        `${API_URL}/open/interface/getResult`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -136,7 +137,7 @@ export const fetchSubjectOptions = (projectCode) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        'http://124.71.1.231/api/open/interface/getResult',
+        `${API_URL}/open/interface/getResult`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -162,7 +163,7 @@ export const fetchProjectClass = (projectCodecode) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        'http://124.71.1.231/api/open/interface/getResult',
+        `${API_URL}/open/interface/getResult`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -186,7 +187,7 @@ export const fetchDetailCourse = (id) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        'http://124.71.1.231/api/open/interface/getCourseDetail',
+        `${API_URL}/open/interface/getCourseDetail`,
         {
           method: 'POST',
           headers: {
@@ -215,7 +216,7 @@ export const fetchMyCoursesId = () => {
     const token = getState().auth.token;
     try {
       const response = await fetch(
-        'http://124.71.1.231/api/train/studentClassRl/ownclass',
+        `${API_URL}/train/studentClassRl/ownclass`,
         {
           method: 'GET',
           headers: {
@@ -248,7 +249,7 @@ export const fetchUserCourses = (finishOver = '') => {
     const token = getState().auth.token;
     try {
       const response = await fetch(
-        `http://124.71.1.231/api/train/studentClassRl/ownclass?finishOver=${finishOver}`,
+        `${API_URL}/train/studentClassRl/ownclass?finishOver=${finishOver}`,
         {
           method: 'GET',
           headers: {

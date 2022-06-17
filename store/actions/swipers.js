@@ -1,3 +1,5 @@
+import API_URL from "../../constants/Config";
+
 export const SET_SWIPERS = 'SET_SWIPERS';
 export const SET_ACTIVITY_IMG = 'SET_ACTIVITY_IMG';
 export const SET_COURSES_SWIPERS = 'SET_COURSES_SWIPERS';
@@ -6,7 +8,7 @@ export const fetchSiwpers = (interfaceCode) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        'http://124.71.1.231/api/open/interface/getResult',
+        `${API_URL}/open/interface/getResult`,
         {
           method: 'POST',
           headers: {
@@ -32,7 +34,7 @@ export const fetchActivityImg = () => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        'http://124.71.1.231/api/open/interface/getResult',
+        `${API_URL}/open/interface/getResult`,
         {
           method: 'POST',
           headers: {

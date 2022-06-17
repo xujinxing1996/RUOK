@@ -1,11 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, Pressable, SafeAreaView, ScrollView, View } from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  View,
+  Dimensions,
+  Alert,
+} from 'react-native';
 import tw from 'twrnc';
 import { Ionicons } from '@expo/vector-icons';
 import TitleText from '../components/TitleText';
 import BaseText from '../components/BaseText';
 import { useSelector } from 'react-redux';
 import { Video } from 'expo-av';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import ListAccordion from '../components/ListAccordion';
 
 const videoType = {
@@ -15,33 +23,125 @@ const videoType = {
   4: '直播',
 };
 
-const VideoDetailScreen = () => {
+const VideoDetailScreen = ({ navigation, route }) => {
+  const { isFree } = route.params;
+  const [tryTime, setTryTime] = useState(0);
   const selectedCourse = useSelector((state) => state.courses.courseInfo);
+  const myCoursesId = useSelector((state) => state.courses.myCoursesId);
+  const token = useSelector((state) => state.auth.token);
   const video = useRef(null);
+  const [positionMillis, setPositionMillis] = useState(0);
+
   const [currentVideo, setCurrentVideo] = useState(null);
 
   const handleClickVideo = (media) => {
-    video.current && video.current.stopAsync();
+    if (!isFree && !myCoursesId.includes(selectedCourse.classId) && !media.tryTime) {
+      Alert.alert(
+        '提示',
+        '您还没报考本班次的课程哦，请登录或者报名后再来学习哟!'
+      );
+      return;
+    }
+    // 试听的毫秒数
+    setTryTime(media.tryTime * 60 * 1000);
+    currentVideo && savePositionMillis(currentVideo.mediaId);
     setCurrentVideo(media);
   };
 
+  const setOrientation = async () => {
+    if (Dimensions.get('window').height > Dimensions.get('window').width) {
+      //Device is in portrait mode
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE
+      );
+    } else {
+      //Device is in landscape mode
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT
+      );
+    }
+  };
+
   useEffect(() => {
-    video.current && video.current.replayAsync();
+    currentVideo && playMedia(currentVideo.mediaId);
   }, [currentVideo]);
 
-  const CatalogItem = ({ media }) => {
-    return (
-      <Pressable
-        onPress={() => handleClickVideo(media)}
-        style={tw`ml-9 p-2 my-1 border-b border-gray-300 flex-row justify-around`}
-      >
-        <BaseText>{media.mediaName}</BaseText>
-        <BaseText>{videoType[media.mediaType]}</BaseText>
-        <BaseText style="px-3 font-bold bg-indigo-200 text-blue-500 rounded-xl">
-          0%
-        </BaseText>
-      </Pressable>
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      currentVideo && savePositionMillis(currentVideo.mediaId);
+    });
+    return unsubscribe;
+  }, [currentVideo, positionMillis]);
+
+  useEffect(() => {
+    function tryListen() {
+      if (!currentVideo || myCoursesId.includes(selectedCourse.classId)) return;
+      if (!isFree && tryTime > 0 && positionMillis >= tryTime) {
+        setCurrentVideo(null);
+        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+        Alert.alert('提示', '试听结束，请报名后再登录学习!', [
+          { text: '知道了', onPress: () => setPositionMillis(0) },
+        ]);
+      }
+    }
+
+    tryListen();
+  }, [tryTime, currentVideo, positionMillis]);
+
+  const playMedia = async (mediaId) => {
+    if (video.current && token) {
+      const { data } = await getPositionMillis(mediaId);
+      video.current.playFromPositionAsync(data.watchTime);
+    } else {
+      video.current.playFromPositionAsync(0);
+    }
+  };
+
+  const savePositionMillis = (mediaId) => {
+    if (mediaId && token) {
+      fetch('http://124.71.1.231/api/train/watchLog/recordWatchLog', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+        body: JSON.stringify({
+          mediaId,
+          watchTime: positionMillis,
+        }),
+      });
+    }
+  };
+
+  const getPositionMillis = async (mediaId) => {
+    const response = await fetch(
+      'http://124.71.1.231/api/open/interface/getMediaPlayProcess',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+        body: JSON.stringify({
+          mediaId,
+        }),
+      }
     );
+    if (!response.ok) {
+      throw new Error('请求错误');
+    }
+    const resData = await response.json();
+    return resData;
+  };
+
+  const _onPlaybackStatusUpdate = async (status) => {
+    if (status.isLoaded) {
+      setPositionMillis(status.positionMillis);
+    } else {
+      if (status.error) {
+        console.log(`FATAL PLAYER ERROR: ${status.error}`);
+      }
+    }
   };
 
   return (
@@ -55,9 +155,11 @@ const VideoDetailScreen = () => {
               source={{
                 uri: currentVideo.mediaUrl,
               }}
+              onFullscreenUpdate={setOrientation}
               useNativeControls
               resizeMode="contain"
               isLooping={false}
+              onPlaybackStatusUpdate={_onPlaybackStatusUpdate}
             />
           ) : (
             <Image

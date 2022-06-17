@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { Icon, ListItem, Text } from 'react-native-elements';
+import { Icon, ListItem, Text } from "@rneui/themed";
 import tw from 'twrnc';
 
 const ListAccordion = ({ video, onClickVideo = null }) => {
@@ -19,7 +19,7 @@ const ListAccordion = ({ video, onClickVideo = null }) => {
       }
       isExpanded={expanded}
       onPress={() => {
-        setExpanded(!expanded);
+        setExpanded((e) => !e);
       }}
     >
       {video.medias
@@ -27,6 +27,10 @@ const ListAccordion = ({ video, onClickVideo = null }) => {
             <ListItem key={item.mediaId} bottomDivider>
               <ListItem.Content>
                 <ListItem.Title>
+                {/* <View style={tw`flex-row items-center pl-4`}>
+                      <Icon type="ionicon" name="videocam" size={20} />
+                      <Text style={tw`px-1`}>{item.mediaName}</Text>
+                    </View> */}
                   {onClickVideo ? (
                     <Pressable
                       onPress={() => onClickVideo(item)}

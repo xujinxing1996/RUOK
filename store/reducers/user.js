@@ -1,4 +1,4 @@
-import { SET_USER_INFO } from '../actions/user';
+import { RESET_USER_INFO, SET_USER_INFO } from '../actions/user';
 
 const initialState = {
   userInfo: null,
@@ -10,6 +10,10 @@ export default (state = initialState, action) => {
       return {
         userInfo: action.userInfo,
       };
+    case RESET_USER_INFO:
+      return {
+        userInfo: null,
+      };;
     default:
       return state;
   }

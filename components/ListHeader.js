@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon } from "@rneui/themed";
 import tw from 'twrnc';
 
 const ListHeader = ({ title, onSelect }) => {

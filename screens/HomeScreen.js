@@ -35,10 +35,11 @@ const HomeScreen = ({ navigation }) => {
     setError(null);
     setIsLoading(true);
     try {
+      const params = { projectCode: '', subjectCode: '' };
       await dispatch(swipersActions.fetchSiwpers('SI0001'));
       await dispatch(swipersActions.fetchActivityImg());
-      await dispatch(coursesActions.fetchBoutiqueCourses(1, 2, false));
-      await dispatch(coursesActions.fetchFreeCourses(1, 2, false));
+      await dispatch(coursesActions.fetchBoutiqueCourses(1, 2, params, false));
+      await dispatch(coursesActions.fetchFreeCourses(1, 2, params, false));
       await dispatch(teachersActions.fetchGetTeachers(1, 3));
     } catch (err) {
       setError(err.message);
@@ -52,8 +53,8 @@ const HomeScreen = ({ navigation }) => {
 
   if (error) {
     return (
-      <View style={tw``}>
-        <Text>系统错误</Text>
+      <View>
+        <Text>系统错误{error}</Text>
         <Button title="重试" />
       </View>
     );
@@ -99,7 +100,9 @@ const HomeScreen = ({ navigation }) => {
                 <BaseText>活动中心</BaseText>
               </View>
               <Pressable
-                onPress={() => navigation.navigate('FreeCourse', { isFree: false })}
+                onPress={() =>
+                  navigation.navigate('FreeCourse', { isFree: false })
+                }
                 style={tw`flex-1 items-center`}
               >
                 <Image
@@ -108,7 +111,10 @@ const HomeScreen = ({ navigation }) => {
                 />
                 <BaseText>热门课程</BaseText>
               </Pressable>
-              <Pressable onPress={() => navigation.navigate('Teachers')} style={tw`flex-1 items-center`}>
+              <Pressable
+                onPress={() => navigation.navigate('Teachers')}
+                style={tw`flex-1 items-center`}
+              >
                 <Image
                   style={tw`w-[45px] h-[45px]`}
                   source={require('../assets/images/teacher.jpg')}
@@ -131,7 +137,7 @@ const HomeScreen = ({ navigation }) => {
               </View>
               <Image
                 style={tw`h-full`}
-                source={{ uri: activityImg && activityImg[0].imageUrl }}
+                source={{ uri: activityImg && activityImg[0]?.imageUrl }}
               />
             </View>
           </View>
@@ -144,9 +150,9 @@ const HomeScreen = ({ navigation }) => {
           {boutiqueCourses.slice(0, 2).map((item) => (
             <CourseGridItem
               onSelectCourse={() => {
-                console.log('classId', item.classId);
                 navigation.navigate('CourseHomeDetail', {
                   courseId: item.classId,
+                  isFree: item.packagePrice === 0,
                 });
               }}
               imageUrl={item.classImage}
@@ -168,6 +174,7 @@ const HomeScreen = ({ navigation }) => {
               onSelectCourse={() => {
                 navigation.navigate('CourseHomeDetail', {
                   courseId: item.classId,
+                  isFree: item.packagePrice === 0,
                 });
               }}
               imageUrl={item.classImage}

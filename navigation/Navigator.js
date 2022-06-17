@@ -16,6 +16,7 @@ import IonicsHeaderButton from '../components/IonicsHeaderButton';
 import AuthScreen from '../screens/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import SettingScreen from '../screens/SettingScreen';
+import Colors from '../constants/Colors';
 
 const Stack = createNativeStackNavigator();
 
@@ -97,7 +98,7 @@ const CourseTabNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         headerTitleAlign: 'center',
-        tabBarActiveTintColor: '#3b82f6',
+        tabBarActiveTintColor: Colors.primary,
         headerShadowVisible: false,
         tabBarHideOnKeyboard: true,
       }}

@@ -16,7 +16,10 @@ export default (state = initialState, action) => {
       };
     case LOGOUT:
       AsyncStorageLib.removeItem(TOKEN);
-      return initialState;
+      return {
+        token: null,
+        user: null,
+      };
     default:
       return state;
   }

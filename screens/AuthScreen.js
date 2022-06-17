@@ -2,19 +2,18 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   View,
   Alert,
   ActivityIndicator,
-  Pressable,
 } from 'react-native';
 import tw from 'twrnc';
 import { useDispatch } from 'react-redux';
-import { Button, CheckBox, Chip, Text } from 'react-native-elements';
-import Card from '../components/UI/Card';
+import { Button, CheckBox, Chip, Text } from "@rneui/themed";
 import Input from '../components/UI/Input';
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';
+import * as userActions from '../store/actions/user';
+import * as coursesActions from '../store/actions/courses';
 import { getValidCode } from '../store/actions/user';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
@@ -109,6 +108,8 @@ const AuthScreen = ({ navigation, route }) => {
           isLogin
         )
       );
+      await dispatch(userActions.getUserInfo());
+      await dispatch(coursesActions.fetchMyCoursesId());
       if (route.name === 'UserAuthScreen') {
         navigation.navigate('UserInfo');
       } else {

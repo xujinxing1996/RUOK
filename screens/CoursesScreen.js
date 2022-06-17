@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLayoutEffect } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import { BottomSheet, ListItem, Button } from 'react-native-elements';
+import { View, Image, StyleSheet, Text } from 'react-native';
+import { BottomSheet, ListItem, Button } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import { RefreshListView, RefreshState } from '../libs/refresh-list';
@@ -16,8 +16,8 @@ const CoursesScreen = ({ navigation }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [list, setList] = useState([]);
   const [pageInfo, setPageInfo] = useState({ page: 1 });
-  const [selectProjectName, setSelectProjectName] = useState('项目');
-  const [selectSubjectName, setSelectSubjectName] = useState('科目');
+  const [projectCode, setProjectCode] = useState(null);
+  const [subjectCode, setSubjectCode] = useState(null);
   const [selectClassName, setSelectClassName] = useState({
     title: '全部课程',
     code: 'SI0009',
@@ -40,7 +40,7 @@ const CoursesScreen = ({ navigation }) => {
   const handleFilterClick = () => {
     projectOptions.forEach((option) => {
       option.onPress = async () => {
-        setSelectProjectName(option.dictName);
+        setProjectCode(option);
         await dispatch(coursesAction.fetchSubjectOptions(option.dictValue));
         setIsVisible(false);
       };
@@ -49,7 +49,12 @@ const CoursesScreen = ({ navigation }) => {
       dictName: '取消',
       containerStyle: { backgroundColor: Colors.primary },
       titleStyle: { color: 'white' },
-      onPress: () => setIsVisible(false),
+      onPress: () => {
+        setProjectCode(null);
+        setSubjectCode(null);
+        dispatch(coursesAction.fetchSubjectOptions(''));
+        setIsVisible(false);
+      },
     });
     setList(options);
     setIsVisible(true);
@@ -57,9 +62,8 @@ const CoursesScreen = ({ navigation }) => {
 
   const handleFilterSubjectClick = () => {
     subjectOptions.forEach((option) => {
-      option.onPress = async () => {
-        setSelectSubjectName(option.dictName);
-        await dispatch(coursesAction.fetchSubjectOptions(option.dictValue));
+      option.onPress = () => {
+        setSubjectCode(option);
         setIsVisible(false);
       };
     });
@@ -67,7 +71,10 @@ const CoursesScreen = ({ navigation }) => {
       dictName: '取消',
       containerStyle: { backgroundColor: Colors.primary },
       titleStyle: { color: 'white' },
-      onPress: () => setIsVisible(false),
+      onPress: () => {
+        setSubjectCode(null);
+        setIsVisible(false);
+      },
     });
     setList(options);
     setIsVisible(true);
@@ -118,20 +125,23 @@ const CoursesScreen = ({ navigation }) => {
   const loadData = useCallback(async () => {
     try {
       const isFooter = refreshState === RefreshState.FooterRefreshing;
-      console.log(`selectClassName`, selectClassName);
+      const params = {
+        projectCode: projectCode ? projectCode.dictValue : '',
+        subjectCode: subjectCode ? subjectCode.dictValue : '',
+      };
       await dispatch(coursesAction.fetchProjectOptions());
       await dispatch(swipersActions.fetchSiwpers('SI0006'));
       await dispatch(
         coursesAction.fetchGetCourses(
           pageInfo.page,
           5,
+          params,
           isFooter,
           selectClassName.code
         )
       );
       setRefreshState(RefreshState.Idle);
     } catch (error) {
-      console.log(`error`, error);
       if (error.message === 'NoMoreData') {
         setRefreshState(RefreshState.NoMoreData);
       } else {
@@ -139,6 +149,10 @@ const CoursesScreen = ({ navigation }) => {
       }
     }
   }, [dispatch, pageInfo, selectClassName]);
+
+  useEffect(() => {
+    setPageInfo({ page: 1 });
+  }, [projectCode, subjectCode]);
 
   useEffect(() => {
     loadData();
@@ -155,7 +169,7 @@ const CoursesScreen = ({ navigation }) => {
 
   return (
     <View style={tw`flex-1 px-3 bg-white`}>
-      <BottomSheet modalProps={{}} isVisible={isVisible}>
+      <BottomSheet isVisible={isVisible}>
         {list.map((l, i) => (
           <ListItem
             key={i}
@@ -173,20 +187,24 @@ const CoursesScreen = ({ navigation }) => {
           <View>
             <View style={tw`flex-row`}>
               <Button
-                title={selectProjectName}
+                title={projectCode ? projectCode.dictName : '项目'}
                 buttonStyle={styles.filterBtn}
                 titleStyle={{ color: '#000' }}
                 onPress={handleFilterClick}
               />
               <Button
-                title={selectSubjectName}
+                title={subjectCode ? subjectCode.dictName : '科目'}
                 buttonStyle={styles.filterBtn}
                 titleStyle={{ color: '#000' }}
                 onPress={handleFilterSubjectClick}
               />
             </View>
             <View style={tw`rounded-xl overflow-hidden`}>
-              <Swiper autoplay={true} autoplayTimeout={4} style={tw`h-[200px] my-1.5`}>
+              <Swiper
+                autoplay={true}
+                autoplayTimeout={4}
+                style={tw`h-[200px] my-1.5`}
+              >
                 {swipers &&
                   swipers.map((item, index) => {
                     return (
@@ -246,7 +264,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 30,
     paddingHorizontal: 15,
-    width: 115,
+    minWidth: 115,
   },
 });
 

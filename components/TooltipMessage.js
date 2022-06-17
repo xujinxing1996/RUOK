@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import tw from 'twrnc';
-import Tooltip from 'react-native-walkthrough-tooltip';
 import { Image, Pressable, Text } from 'react-native';
 import BaseText from './BaseText';
 import { View } from 'react-native';

@@ -1,12 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Pressable, Button } from 'react-native';
-import { Chip } from 'react-native-elements';
+import { Chip } from "@rneui/themed";
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import BaseText from '../components/BaseText';
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';
+import * as userActions from '../store/actions/user';
+import { SET_MY_COURSES_ID } from '../store/actions/courses';
 
 const SettingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.userInfo);
@@ -14,6 +16,8 @@ const SettingScreen = ({ navigation }) => {
 
   const handleLogout = () => {
     dispatch(authActions.logout());
+    dispatch(userActions.resetUserInfo());
+    dispatch({ type: SET_MY_COURSES_ID, products: [] });
     navigation.navigate('UserInfo');
   };
 
@@ -25,7 +29,7 @@ const SettingScreen = ({ navigation }) => {
         >
           <View style={tw`flex-row flex-1 justify-between mr-4`}>
             <BaseText style="ml-3 font-bold">手机号</BaseText>
-            <BaseText style="ml-3 font-bold">{userInfo.phonenumber}</BaseText>
+            <BaseText style="ml-3 font-bold">{userInfo?.phonenumber}</BaseText>
           </View>
           <Ionicons name="ios-chevron-forward" color="gray" size={20} />
         </Pressable>

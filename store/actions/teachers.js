@@ -3,7 +3,7 @@ export const SET_TEACHERS = 'SET_TEACHERS';
 export const fetchGetTeachers = (page, size) => {
   return async (dispatch) => {
     try {
-      const response = await fetch('http://121.199.173.63:8007/api/open/interface/getResult', {
+      const response = await fetch('http://124.71.1.231/api/open/interface/getResult', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

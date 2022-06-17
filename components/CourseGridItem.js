@@ -1,14 +1,14 @@
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Image,
   Platform,
   TouchableOpacity,
   TouchableNativeFeedback,
-  Text,
+  Pressable,
+  Alert,
 } from 'react-native';
-import { Tooltip } from 'react-native-elements';
 import tw from 'twrnc';
 import Colors from '../constants/Colors';
 import BaseText from './BaseText';
@@ -28,6 +28,7 @@ const CourseGridItem = ({
   if (Platform.OS === 'android' && Platform.Version > 21) {
     TouchableCmp = TouchableNativeFeedback;
   }
+  const [showTip, setShowTip] = useState(false);
 
   let contentEl = (
     <View style={tw`mx-3 mb-3.5 flex-row h-[130px]`}>
@@ -56,20 +57,17 @@ const CourseGridItem = ({
   if (isTeacher) {
     contentEl = (
       <View
-        style={tw`flex-row h-[130px] mb-3 p-2 rounded-xl border-gray-300 border justify-between`}
+        style={tw`flex-row mb-3 p-2 rounded-xl border-gray-300 border justify-between`}
       >
-        <Image style={tw`w-1/3 h-full rounded-xl`} source={{ uri: imageUrl }} />
+        <Image style={tw`w-1/3 h-[140px] rounded-xl`} source={{ uri: imageUrl }} />
         <View style={tw`w-[65%] justify-evenly`}>
           <TitleText titleText={title} />
           <BaseText style="mx-2 text-gray-400">{types}</BaseText>
-          <Tooltip
-            backgroundColor="#afe0fc"
-            popover={<Text>{description}</Text>}
-          >
-            <BaseText style="mx-2 text-gray-400" numberOfLines={3}>
+          <Pressable onPress={() => setShowTip((value) => !value)}>
+            <BaseText style="mx-2 text-gray-400" numberOfLines={!showTip ? 3 : 20}>
               {description}
             </BaseText>
-          </Tooltip>
+          </Pressable>
         </View>
       </View>
     );

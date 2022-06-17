@@ -10,7 +10,7 @@ export const authenticate = (token) => {
 
 export const login = (phoneNumber, password, isLogin) => {
   return async (dispatch) => {
-    let url = 'http://121.199.173.63:8007/api/login';
+    let url = 'http://124.71.1.231/api/login';
     let data = {
       code: 'CHUJIEKEJI',
       interfaceCode: 'TN0001',
@@ -19,7 +19,7 @@ export const login = (phoneNumber, password, isLogin) => {
       uuid: '123',
     };
     if (!isLogin) {
-      url = 'http://121.199.173.63:8007/api/authentication/mobile';
+      url = 'http://124.71.1.231/api/authentication/mobile';
       data = {
         code: 'CHUJIEKEJI',
         mobile: phoneNumber,
@@ -40,14 +40,14 @@ export const login = (phoneNumber, password, isLogin) => {
       throw new Error(resData.msg);
     }
     dispatch(authenticate(resData.token));
-    saveDataToStorage(resData.token);
+    await saveDataToStorage(resData.token);
   };
 };
 
 export const getCode = (phoneNumber) => {
   return async (dispatch) => {
     const response = await fetch(
-      `http://121.199.173.63:8007/api/send/sms/validcode?mobile=${phoneNumber}`,
+      `http://124.71.1.231/api/send/sms/validcode?mobile=${phoneNumber}`,
       {
         method: 'GET',
       }

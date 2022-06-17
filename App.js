@@ -7,6 +7,7 @@ import CourseTabNavigator from './navigation/Navigator';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
+import { ThemeProvider } from '@rneui/themed';
 import coursesReducer from './store/reducers/courses';
 import swipersReducer from './store/reducers/swipers';
 import teachersReducer from './store/reducers/teachers';
@@ -43,10 +44,12 @@ export default function App() {
   }
 
   return (
-    <Provider store={store}>
-      <View style={tw`flex-1`}>
-        <CourseTabNavigator />
-      </View>
-    </Provider>
+    <ThemeProvider>
+      <Provider store={store}>
+        <View style={tw`flex-1`}>
+          <CourseTabNavigator />
+        </View>
+      </Provider>
+    </ThemeProvider>
   );
 }

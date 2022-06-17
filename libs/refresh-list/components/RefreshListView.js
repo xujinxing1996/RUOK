@@ -80,8 +80,6 @@ class RefreshListView extends PureComponent<Props> {
   };
 
   render() {
-    log("[RefreshListView]  render  refreshState:" + this.props.refreshState);
-    console.log("[RefreshListView]  render  refreshState:" + this.props.refreshState);
     let { renderItem, onHeaderRefresh, ...rest } = this.props;
 
     return (

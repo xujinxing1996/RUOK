@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Tab, TabView, Button } from 'react-native-elements';
+import { Card, Button } from '@rneui/themed';
 import tw from 'twrnc';
 import BaseText from '../components/BaseText';
 import TitleText from '../components/TitleText';
@@ -18,9 +18,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { commonStyle } from '../styles';
 
 const CourseDetail = ({ navigation, route }) => {
-  const { courseId } = route.params;
+  const { courseId, isFree } = route.params;
   const [isLoading, setIsLoading] = useState(false);
-  const [index, setIndex] = useState(0);
   const selectedCourse = useSelector((state) => state.courses.courseInfo);
   const dispatch = useDispatch();
 
@@ -31,13 +30,12 @@ const CourseDetail = ({ navigation, route }) => {
   }, [dispatch]);
 
   const handleStartStudy = () => {
-    console.log('>>>>>>start');
     if (route.name === 'CourseHomeDetail') {
-      navigation.navigate('HomeVideoDetail');
+      navigation.navigate('HomeVideoDetail', { isFree });
     } else if (route.name === 'CourseDetail') {
-      navigation.navigate('CourseVideoDetail');
+      navigation.navigate('CourseVideoDetail', { isFree });
     } else if (route.name === 'UserCourseDetail') {
-      navigation.navigate('UserVideoDetail');
+      navigation.navigate('UserVideoDetail', { isFree });
     }
   };
 
@@ -56,7 +54,7 @@ const CourseDetail = ({ navigation, route }) => {
   return (
     selectedCourse && (
       <SafeAreaView style={commonStyle.safeArea}>
-        <ScrollView style={tw`bg-white`}>
+        <ScrollView style={tw`flex-1 bg-white`}>
           <View style={tw`m-4`}>
             <Image
               resizeMode="stretch"
@@ -113,41 +111,36 @@ const CourseDetail = ({ navigation, route }) => {
             ))}
           </View>
           <View style={tw`h-[9px] bg-gray-100`}></View>
-          <Tab
-            value={index}
-            onChange={setIndex}
-            indicatorStyle={{ backgroundColor: Colors.primary }}
+          <Card
+            containerStyle={{
+              margin: 0,
+              padding: 0,
+              paddingVertical: 10,
+              borderWidth: 0,
+            }}
           >
-            <Tab.Item
-              titleStyle={{ color: index === 0 ? Colors.primary : '#000' }}
-              containerStyle={{ backgroundColor: '#fff' }}
-              title="课程概述"
-            />
-            <Tab.Item
-              titleStyle={{ color: index === 1 ? Colors.primary : '#000' }}
-              containerStyle={{ backgroundColor: '#fff' }}
-              title="课程大纲"
-            />
-          </Tab>
-
-          <TabView value={index} onChange={setIndex}>
-            <TabView.Item style={tw`w-full`}>
-              <View style={tw`p-3`}>
-                <BaseText>
-                  {selectedCourse.courseDescription || '无内容'}
-                </BaseText>
-              </View>
-            </TabView.Item>
-            <TabView.Item style={tw`w-full`}>
-              <View style={tw`p-3`}>
-                {selectedCourse.catalogueList.map((video) => {
-                  return (
-                    <ListAccordion key={video.catalogueId} video={video} />
-                  );
-                })}
-              </View>
-            </TabView.Item>
-          </TabView>
+            <Card.Title style={{ marginTop: 15 }}>课程概述</Card.Title>
+            <View style={tw`px-5`}>
+              <BaseText>
+                {selectedCourse.courseDescription || '无内容'}
+              </BaseText>
+            </View>
+          </Card>
+          <Card
+            containerStyle={{
+              margin: 0,
+              padding: 0,
+              paddingVertical: 10,
+              borderWidth: 0,
+            }}
+          >
+            <Card.Title style={{ marginTop: 15 }}>课程大纲</Card.Title>
+            <View style={tw`px-5`}>
+              {selectedCourse.catalogueList?.map((video) => {
+                return <ListAccordion key={video.catalogueId} video={video} />;
+              })}
+            </View>
+          </Card>
           <Button
             title="开始学习"
             buttonStyle={{
@@ -159,7 +152,7 @@ const CourseDetail = ({ navigation, route }) => {
             containerStyle={{
               width: 200,
               alignSelf: 'center',
-              marginBottom: 30,
+              marginVertical: 10,
             }}
             onPress={handleStartStudy}
           />

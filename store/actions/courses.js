@@ -5,6 +5,7 @@ export const SET_FREE_COURSES = 'SET_FREE_COURSES';
 export const SET_DETAIL_COURSE = 'SET_DETAIL_COURSE';
 export const SET_ALL_COURSES = 'SET_ALL_COURSES';
 export const SET_USER_COURSES = 'SET_USER_COURSES';
+export const SET_MY_COURSES_ID = 'SET_MY_COURSES_ID';
 export const SET_PROJECT_OPTIONS = 'SET_PROJECT_OPTIONS';
 export const SEt_PROJECT_CLASSES = SEt_PROJECT_CLASSES;
 export const SET_CLASS_OPTIONS = 'SET_CLASS_OPTIONS';
@@ -20,10 +21,10 @@ const loadMoreData = (getState, isFooter, data) => {
   return products;
 };
 
-export const fetchGetCourses = (page, size, isFooter, interfaceCode) => {
+export const fetchGetCourses = (page, size, params, isFooter, interfaceCode) => {
   return async (dispatch, getState) => {
     const response = await fetch(
-      'http://121.199.173.63:8007/api/open/interface/getResult',
+      'http://124.71.1.231/api/open/interface/getResult',
       {
         method: 'POST',
         headers: {
@@ -33,6 +34,7 @@ export const fetchGetCourses = (page, size, isFooter, interfaceCode) => {
           interfaceCode,
           page,
           size,
+          params,
         }),
       }
     );
@@ -47,12 +49,11 @@ export const fetchGetCourses = (page, size, isFooter, interfaceCode) => {
   };
 };
 
-export const fetchFreeCourses = (page, size, isFooter) => {
+export const fetchFreeCourses = (page, size, params, isFooter) => {
   return async (dispatch, getState) => {
     try {
-      console.log('free课程');
       const response = await fetch(
-        'http://121.199.173.63:8007/api/open/interface/getResult',
+        'http://124.71.1.231/api/open/interface/getResult',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -60,6 +61,7 @@ export const fetchFreeCourses = (page, size, isFooter) => {
             interfaceCode: 'SI0008',
             page,
             size,
+            params,
           }),
         }
       );
@@ -72,17 +74,16 @@ export const fetchFreeCourses = (page, size, isFooter) => {
       const products = loadMoreData(getState, isFooter, resData.data);
       dispatch({ type: SET_FREE_COURSES, products });
     } catch (error) {
-      throw error.message;
+      throw error;
     }
   };
 };
 
-export const fetchBoutiqueCourses = (page, size, isFooter) => {
+export const fetchBoutiqueCourses = (page, size, params, isFooter) => {
   return async (dispatch, getState) => {
     try {
-      console.log('精品课程');
       const response = await fetch(
-        'http://121.199.173.63:8007/api/open/interface/getResult',
+        'http://124.71.1.231/api/open/interface/getResult',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -90,6 +91,7 @@ export const fetchBoutiqueCourses = (page, size, isFooter) => {
             interfaceCode: 'SI0007',
             page,
             size,
+            params,
           }),
         }
       );
@@ -102,7 +104,7 @@ export const fetchBoutiqueCourses = (page, size, isFooter) => {
       const products = loadMoreData(getState, isFooter, resData.data);
       dispatch({ type: SET_BOUTIQUE_COURSES, products });
     } catch (error) {
-      throw error.message;
+      throw error;
     }
   };
 };
@@ -111,7 +113,7 @@ export const fetchProjectOptions = () => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        'http://121.199.173.63:8007/api/open/interface/getResult',
+        'http://124.71.1.231/api/open/interface/getResult',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -134,7 +136,7 @@ export const fetchSubjectOptions = (projectCode) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        'http://121.199.173.63:8007/api/open/interface/getResult',
+        'http://124.71.1.231/api/open/interface/getResult',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -160,7 +162,7 @@ export const fetchProjectClass = (projectCodecode) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        'http://121.199.173.63:8007/api/open/interface/getResult',
+        'http://124.71.1.231/api/open/interface/getResult',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -184,7 +186,7 @@ export const fetchDetailCourse = (id) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        'http://121.199.173.63:8007/api/open/interface/getCourseDetail',
+        'http://124.71.1.231/api/open/interface/getCourseDetail',
         {
           method: 'POST',
           headers: {
@@ -203,7 +205,40 @@ export const fetchDetailCourse = (id) => {
       const resData = await response.json();
       dispatch({ type: SET_DETAIL_COURSE, products: resData.data });
     } catch (error) {
-      throw error.message;
+      throw error;
+    }
+  };
+};
+
+export const fetchMyCoursesId = () => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    try {
+      const response = await fetch(
+        'http://124.71.1.231/api/train/studentClassRl/ownclass',
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error('请求错误');
+      }
+      const resData = await response.json();
+
+      if (resData.code === 500) {
+        throw new Error(resData.msg);
+      }
+      if (resData.code === 401) {
+        dispatch({ type: LOGOUT });
+        return;
+      }
+      const ids = resData.data.map((course) => course.classId);
+      dispatch({ type: SET_MY_COURSES_ID, products: ids });
+    } catch (error) {
+      throw new Error(error.message);
     }
   };
 };
@@ -213,7 +248,7 @@ export const fetchUserCourses = (finishOver = '') => {
     const token = getState().auth.token;
     try {
       const response = await fetch(
-        `http://121.199.173.63:8007/api/train/studentClassRl/ownclass?finishOver=${finishOver}`,
+        `http://124.71.1.231/api/train/studentClassRl/ownclass?finishOver=${finishOver}`,
         {
           method: 'GET',
           headers: {
@@ -234,7 +269,7 @@ export const fetchUserCourses = (finishOver = '') => {
       }
       dispatch({ type: SET_USER_COURSES, products: resData.data });
     } catch (error) {
-      throw error.msg;
+      throw new Error(error.message);
     }
   };
 };

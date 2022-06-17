@@ -6,6 +6,8 @@ import tw from 'twrnc';
 import { TOKEN } from '../constants/Auth';
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';
+import * as userActions from '../store/actions/user';
+import * as coursesActions from '../store/actions/courses';
 
 const StartupScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -16,6 +18,8 @@ const StartupScreen = ({ navigation }) => {
         const token = await AsyncStorageLib.getItem(TOKEN);
         if (token) {
           await dispatch(authActions.authenticate(token));
+          await dispatch(userActions.getUserInfo());
+          await dispatch(coursesActions.fetchMyCoursesId());
         }
         navigation.navigate('Main');
       } catch (error) {

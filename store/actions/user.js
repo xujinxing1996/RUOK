@@ -1,13 +1,14 @@
 import { LOGOUT } from './auth';
 
 export const SET_USER_INFO = 'SET_USER_INFO';
+export const RESET_USER_INFO = 'RESET_USER_INFO';
 
 export const getUserInfo = () => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
     try {
       const response = await fetch(
-        'http://121.199.173.63:8007/api/system/user/profile',
+        'http://124.71.1.231/api/system/user/profile',
         {
           method: 'GET',
           headers: {
@@ -27,22 +28,28 @@ export const getUserInfo = () => {
   };
 };
 
+export const resetUserInfo = () => {
+  return (dispatch) => {
+    dispatch({ type: RESET_USER_INFO });
+  };
+};
+
 export const getValidCode = async (mobile) => {
-    try {
-      const response = await fetch(
-        `http://121.199.173.63:8007/api/send/sms/validcode?mobile=${mobile}`,
-        {
-          method: 'POST',
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('获取失败');
+  try {
+    const response = await fetch(
+      `http://124.71.1.231/api/send/sms/validcode?mobile=${mobile}`,
+      {
+        method: 'POST',
       }
+    );
 
-      const resData = await response.json();
-      return resData;
-    } catch (error) {
-      console.log(`error`, error);
+    if (!response.ok) {
+      throw new Error('获取失败');
     }
+
+    const resData = await response.json();
+    return resData;
+  } catch (error) {
+    console.log(`error`, error);
+  }
 };

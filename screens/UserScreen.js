@@ -1,56 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Image,
-  Text,
-  View,
-  Button,
-  ActivityIndicator,
-  Pressable,
-} from 'react-native';
+import React from 'react';
+import { Image, View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import BaseText from '../components/BaseText';
-import * as userActions from '../store/actions/user';
-import Colors from '../constants/Colors';
-import { useFocusEffect } from '@react-navigation/core';
-import { Chip } from 'react-native-elements';
 
 const UserScreen = ({ navigation, route }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const userInfo = useSelector((state) => state.user.userInfo);
   const token = useSelector((state) => state.auth.token);
-  const dispatch = useDispatch();
-
-  const loadData = async () => {
-    try {
-      if (token) {
-        setIsLoading(true);
-        await dispatch(userActions.getUserInfo());
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.log(`error`, error);
-    }
-  };
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     loadData();
-  //   }, [dispatch])
-  // );
-
-  useEffect(() => {
-    loadData();
-  }, [navigation]);
-
-  if (isLoading) {
-    return (
-      <View style={tw`flex-1 justify-center items-center`}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
 
   return (
     <View style={tw`bg-white h-full`}>
@@ -61,12 +18,7 @@ const UserScreen = ({ navigation, route }) => {
           {userInfo && userInfo.avatar ? (
             <Image style={tw`w-15 h-15`} source={{ uri: userInfo.avatar }} />
           ) : (
-            <Ionicons
-              name="ios-person"
-              color="#687383"
-              size={35}
-              color="purple"
-            />
+            <Ionicons name="ios-person" color="#687383" size={35} />
           )}
         </View>
         <View>

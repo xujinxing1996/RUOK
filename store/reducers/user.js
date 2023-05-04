@@ -13,7 +13,7 @@ export default (state = initialState, action) => {
     case RESET_USER_INFO:
       return {
         userInfo: null,
-      };;
+      };
     default:
       return state;
   }

@@ -36,7 +36,11 @@ const VideoDetailScreen = ({ navigation, route }) => {
   const [currentVideo, setCurrentVideo] = useState(null);
 
   const handleClickVideo = (media) => {
-    if (!isFree && !myCoursesId.includes(selectedCourse.classId) && !media.tryTime) {
+    if (
+      !isFree &&
+      !myCoursesId.includes(selectedCourse.classId) &&
+      !media.tryTime
+    ) {
       Alert.alert(
         '提示',
         '您还没报考本班次的课程哦，请登录或者报名后再来学习哟!'
@@ -155,6 +159,7 @@ const VideoDetailScreen = ({ navigation, route }) => {
               style={tw`h-[200px] w-full`}
               source={{
                 uri: currentVideo.mediaUrl,
+                headers: { Referer: 'www.hongyuedu.cn' },
               }}
               onFullscreenUpdate={setOrientation}
               useNativeControls

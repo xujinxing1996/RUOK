@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import tw from 'twrnc';
 import { useDispatch } from 'react-redux';
-import { Button, CheckBox, Chip, Text } from "@rneui/themed";
+import { Button, CheckBox, Chip, Text } from '@rneui/themed';
 import Input from '../components/UI/Input';
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Pressable, View, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
@@ -6,13 +6,20 @@ import tw from 'twrnc';
 import TitleText from '../TitleText';
 import BaseText from '../BaseText';
 
-function CourseItem({ classImage, className, packagePrice, beginTime, endTime }) {
+function CourseItem({
+  classId,
+  classImage,
+  className,
+  packagePrice,
+  beginTime,
+  endTime,
+}) {
   const navigation = useNavigation();
 
   return (
     <Pressable
       onPress={() =>
-        navigation.navigate('UserCourseDetail', { courseId: item.classId })
+        navigation.navigate('UserCourseDetail', { courseId: classId })
       }
       style={({ pressed }) => pressed && styles.pressed}
     >

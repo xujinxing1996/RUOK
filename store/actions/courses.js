@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import API_URL from '../../constants/Config';
 import { LOGOUT } from './auth';
 
@@ -22,23 +23,26 @@ const loadMoreData = (getState, isFooter, data) => {
   return products;
 };
 
-export const fetchGetCourses = (page, size, params, isFooter, interfaceCode) => {
+export const fetchGetCourses = (
+  page,
+  size,
+  params,
+  isFooter,
+  interfaceCode
+) => {
   return async (dispatch, getState) => {
-    const response = await fetch(
-      `${API_URL}/open/interface/getResult`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          interfaceCode,
-          page,
-          size,
-          params,
-        }),
-      }
-    );
+    const response = await fetch(`${API_URL}/open/interface/getResult`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        interfaceCode,
+        page,
+        size,
+        params,
+      }),
+    });
 
     if (!response.ok) {
       throw new Error('请求错误');
@@ -53,19 +57,16 @@ export const fetchGetCourses = (page, size, params, isFooter, interfaceCode) => 
 export const fetchFreeCourses = (page, size, params, isFooter) => {
   return async (dispatch, getState) => {
     try {
-      const response = await fetch(
-        `${API_URL}/open/interface/getResult`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            interfaceCode: 'SI0008',
-            page,
-            size,
-            params,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/open/interface/getResult`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          interfaceCode: 'SI0008',
+          page,
+          size,
+          params,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error('请求错误');
@@ -83,19 +84,16 @@ export const fetchFreeCourses = (page, size, params, isFooter) => {
 export const fetchBoutiqueCourses = (page, size, params, isFooter) => {
   return async (dispatch, getState) => {
     try {
-      const response = await fetch(
-        `${API_URL}/open/interface/getResult`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            interfaceCode: 'SI0007',
-            page,
-            size,
-            params,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/open/interface/getResult`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          interfaceCode: 'SI0007',
+          page,
+          size,
+          params,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error('请求错误');
@@ -113,16 +111,13 @@ export const fetchBoutiqueCourses = (page, size, params, isFooter) => {
 export const fetchProjectOptions = () => {
   return async (dispatch) => {
     try {
-      const response = await fetch(
-        `${API_URL}/open/interface/getResult`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            interfaceCode: 'SI0004',
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/open/interface/getResult`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          interfaceCode: 'SI0004',
+        }),
+      });
 
       if (!response.ok) {
         throw new Error('请求错误');
@@ -136,19 +131,16 @@ export const fetchProjectOptions = () => {
 export const fetchSubjectOptions = (projectCode) => {
   return async (dispatch) => {
     try {
-      const response = await fetch(
-        `${API_URL}/open/interface/getResult`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            interfaceCode: 'SI0005',
-            params: {
-              projectCode,
-            },
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/open/interface/getResult`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          interfaceCode: 'SI0005',
+          params: {
+            projectCode,
+          },
+        }),
+      });
 
       if (!response.ok) {
         throw new Error('请求错误');
@@ -162,17 +154,14 @@ export const fetchSubjectOptions = (projectCode) => {
 export const fetchProjectClass = (projectCodecode) => {
   return async (dispatch) => {
     try {
-      const response = await fetch(
-        `${API_URL}/open/interface/getResult`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            interfaceCode: 'SI0005',
-            projectCode,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/open/interface/getResult`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          interfaceCode: 'SI0005',
+          projectCode,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error('请求错误');
@@ -215,22 +204,24 @@ export const fetchMyCoursesId = () => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
     try {
-      const response = await fetch(
-        `${API_URL}/train/studentClassRl/ownclass`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/train/studentClassRl/ownclass`, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      });
       if (!response.ok) {
         throw new Error('请求错误');
       }
       const resData = await response.json();
-
       if (resData.code === 500) {
-        throw new Error(resData.msg);
+        Alert.alert('错误', resData.msg, [
+          {
+            text: '确认',
+          },
+        ]);
+        dispatch({ type: SET_MY_COURSES_ID, products: [] });
+        return;
       }
       if (resData.code === 401) {
         dispatch({ type: LOGOUT });
@@ -262,7 +253,13 @@ export const fetchUserCourses = (finishOver = '') => {
       }
       const resData = await response.json();
       if (resData.code === 500) {
-        throw new Error(resData.msg);
+        Alert.alert('错误', resData.msg, [
+          {
+            text: '确认',
+          },
+        ]);
+        dispatch({ type: SET_USER_COURSES, products: [] });
+        return;
       }
       if (resData.code === 401) {
         dispatch({ type: LOGOUT });

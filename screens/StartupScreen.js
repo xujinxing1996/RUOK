@@ -11,7 +11,7 @@ import * as coursesActions from '../store/actions/courses';
 
 const StartupScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     const tryLogin = async () => {
       try {
@@ -23,6 +23,9 @@ const StartupScreen = ({ navigation }) => {
         }
         navigation.navigate('Main');
       } catch (error) {
+        dispatch(authActions.logout());
+        dispatch(userActions.resetUserInfo());
+        dispatch({ type: coursesActions.SET_MY_COURSES_ID, products: [] });
         console.log('error', error);
       }
     };

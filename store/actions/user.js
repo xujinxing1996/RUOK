@@ -8,15 +8,12 @@ export const getUserInfo = () => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
     try {
-      const response = await fetch(
-        `${API_URL}/system/user/profile`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/system/user/profile`, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      });
       const resData = await response.json();
       if (resData.code === 401) {
         dispatch({ type: LOGOUT });

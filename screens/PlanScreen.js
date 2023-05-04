@@ -1,10 +1,6 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React, { useEffect } from 'react';
-import {
-  Image,
-  View,
-  Text,
-} from 'react-native';
+import { Image, View, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import * as coursesActions from '../store/actions/courses';
@@ -20,17 +16,15 @@ const PlanCoursesScreen = ({ navigation, route }) => {
   }, [navigation]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('tabPress', e => {
-      console.log(`route.name`, route.name);
+    const unsubscribe = navigation.addListener('tabPress', (e) => {
       if (route.name === 'Undone') {
         dispatch(coursesActions.fetchUserCourses(0));
       } else {
         dispatch(coursesActions.fetchUserCourses(1));
       }
     });
-  
+
     return unsubscribe;
-    
   }, [navigation]);
 
   return <PlanCoursesOutput courses={courses} />;
